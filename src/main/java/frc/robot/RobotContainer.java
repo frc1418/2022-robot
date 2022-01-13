@@ -4,9 +4,15 @@
 
 package frc.robot;
 
+import static frc.robot.Constants.*;
+
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -21,6 +27,20 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+
+
+  // DRIVE
+  private final VictorSP frontLeftMotor = new VictorSP(FRONT_LEFT_MOTOR);
+  private final VictorSP frontRightMotor = new VictorSP(FRONT_RIGHT_MOTOR);
+  private final VictorSP rearLeftMotor = new VictorSP(REAR_LEFT_MOTOR);
+  private final VictorSP rearRightMotor = new VictorSP(REAR_RIGHT_MOTOR);
+
+  // DRIVE SUBSYSTEM
+  private final SpeedControllerGroup leftMotors = new SpeedControllerGroup(frontLeftMotor, rearLeftMotor);
+  private final SpeedControllerGroup rightMotors = new SpeedControllerGroup(frontRightMotor, rearRightMotor);
+
+  private final DifferentialDrive driveTrain = new DifferentialDrive(leftMotors, rightMotors);
+  private final DriveSubsystem driveSubsystem = new DriveSubsystem(driveTrain);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
