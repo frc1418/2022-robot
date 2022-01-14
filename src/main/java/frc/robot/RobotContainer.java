@@ -30,10 +30,10 @@ public class RobotContainer {
 
 
   // DRIVE
-  private final VictorSP frontLeftMotor = new VictorSP(FRONT_LEFT_MOTOR);
-  private final VictorSP frontRightMotor = new VictorSP(FRONT_RIGHT_MOTOR);
-  private final VictorSP rearLeftMotor = new VictorSP(REAR_LEFT_MOTOR);
-  private final VictorSP rearRightMotor = new VictorSP(REAR_RIGHT_MOTOR);
+  private final VictorSP frontLeftMotor = new VictorSP(DriveTrain.FRONT_LEFT_MOTOR);
+  private final VictorSP frontRightMotor = new VictorSP(DriveTrain.FRONT_RIGHT_MOTOR);
+  private final VictorSP rearLeftMotor = new VictorSP(DriveTrain.REAR_LEFT_MOTOR);
+  private final VictorSP rearRightMotor = new VictorSP(DriveTrain.REAR_RIGHT_MOTOR);
 
   // DRIVE SUBSYSTEM
   private final SpeedControllerGroup leftMotors = new SpeedControllerGroup(frontLeftMotor, rearLeftMotor);
