@@ -14,11 +14,21 @@ package frc.robot;
  */
 public final class Constants {
 
+    /**
+     * 
+     * CAN IDs
+     * 
+     * Drive Train:
+         * Front Right: 1
+         * Rear Right: 2
+         * Front Left: 3
+         * Rear Left: 4
+     */
     public static final class DriveTrain {
-        public static final int FRONT_LEFT_MOTOR = 1;
-        public static final int FRONT_RIGHT_MOTOR = 4;
-        public static final int REAR_LEFT_MOTOR = 3;
-        public static final int REAR_RIGHT_MOTOR = 6;
+        public static final int FRONT_LEFT_MOTOR = 3;
+        public static final int FRONT_RIGHT_MOTOR = 1;
+        public static final int REAR_LEFT_MOTOR = 4;
+        public static final int REAR_RIGHT_MOTOR = 2;
     }
 
 }
