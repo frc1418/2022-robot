@@ -16,6 +16,9 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -30,10 +33,10 @@ public class RobotContainer {
 
 
   // DRIVE
-  private final VictorSP frontLeftMotor = new VictorSP(DriveTrain.FRONT_LEFT_MOTOR);
-  private final VictorSP frontRightMotor = new VictorSP(DriveTrain.FRONT_RIGHT_MOTOR);
-  private final VictorSP rearLeftMotor = new VictorSP(DriveTrain.REAR_LEFT_MOTOR);
-  private final VictorSP rearRightMotor = new VictorSP(DriveTrain.REAR_RIGHT_MOTOR);
+  private final CANSparkMax frontLeftMotor = new CANSparkMax(DriveTrain.FRONT_LEFT_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax frontRightMotor = new CANSparkMax(DriveTrain.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax rearLeftMotor = new CANSparkMax(DriveTrain.REAR_LEFT_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax rearRightMotor = new CANSparkMax(DriveTrain.REAR_RIGHT_MOTOR, MotorType.kBrushless);
 
   // DRIVE SUBSYSTEM
   private final SpeedControllerGroup leftMotors = new SpeedControllerGroup(frontLeftMotor, rearLeftMotor);
