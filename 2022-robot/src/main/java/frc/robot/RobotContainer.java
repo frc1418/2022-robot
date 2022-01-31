@@ -9,8 +9,8 @@ import static frc.robot.Constants.*;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.commands.ExampleCommand;
@@ -41,11 +41,11 @@ public class RobotContainer {
   private final CANSparkMax frontRightMotor = new CANSparkMax(DriveTrain.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
   private final CANSparkMax rearLeftMotor = new CANSparkMax(DriveTrain.REAR_LEFT_MOTOR, MotorType.kBrushless);
   private final CANSparkMax rearRightMotor = new CANSparkMax(DriveTrain.REAR_RIGHT_MOTOR, MotorType.kBrushless);
-  private double xSpeedMultiplier = 0.8;
+  private double xSpeedMultiplier = 0.6;
 
   // DRIVE SUBSYSTEM
-  private final SpeedControllerGroup leftMotors = new SpeedControllerGroup(frontLeftMotor, rearLeftMotor);
-  private final SpeedControllerGroup rightMotors = new SpeedControllerGroup(frontRightMotor, rearRightMotor);
+  private final MotorControllerGroup leftMotors = new MotorControllerGroup(frontLeftMotor, rearLeftMotor);
+  private final MotorControllerGroup rightMotors = new MotorControllerGroup(frontRightMotor, rearRightMotor);
 
   private final DifferentialDrive driveTrain = new DifferentialDrive(leftMotors, rightMotors);
   private final DriveSubsystem driveSubsystem = new DriveSubsystem(driveTrain);
@@ -64,14 +64,16 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    rightMotors.setInverted(true);
+
     Joystick leftJoystick = new Joystick(0);
-        Joystick rightJoystick = new Joystick(1);
-        Joystick altJoystick = new Joystick(2);
+    Joystick rightJoystick = new Joystick(1);
+    Joystick altJoystick = new Joystick(2);
 
         driveSubsystem.setDefaultCommand(new RunCommand(
           () -> {
-              if (robot.isOperatorControlEnabled()) {
-                  driveSubsystem.joystickDrive(-leftJoystick.getY() * xSpeedMultiplier, rightJoystick.getX() * 0.65);
+              if (robot.isTeleopEnabled()) {
+                  driveSubsystem.joystickDrive(leftJoystick.getY() * xSpeedMultiplier, rightJoystick.getX() * 0.45);
               } else {
                   driveSubsystem.drive(0, 0);
               }
