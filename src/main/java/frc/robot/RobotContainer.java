@@ -7,14 +7,17 @@ package frc.robot;
 import static frc.robot.Constants.*;
 
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -31,22 +34,25 @@ public class RobotContainer {
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
+  private final RobotBase robot;
 
   // DRIVE
   private final CANSparkMax frontLeftMotor = new CANSparkMax(DriveTrain.FRONT_LEFT_MOTOR, MotorType.kBrushless);
   private final CANSparkMax frontRightMotor = new CANSparkMax(DriveTrain.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
   private final CANSparkMax rearLeftMotor = new CANSparkMax(DriveTrain.REAR_LEFT_MOTOR, MotorType.kBrushless);
   private final CANSparkMax rearRightMotor = new CANSparkMax(DriveTrain.REAR_RIGHT_MOTOR, MotorType.kBrushless);
+  private double xSpeedMultiplier = 0.6;
 
   // DRIVE SUBSYSTEM
-  private final SpeedControllerGroup leftMotors = new SpeedControllerGroup(frontLeftMotor, rearLeftMotor);
-  private final SpeedControllerGroup rightMotors = new SpeedControllerGroup(frontRightMotor, rearRightMotor);
+  private final MotorControllerGroup leftMotors = new MotorControllerGroup(frontLeftMotor, rearLeftMotor);
+  private final MotorControllerGroup rightMotors = new MotorControllerGroup(frontRightMotor, rearRightMotor);
 
   private final DifferentialDrive driveTrain = new DifferentialDrive(leftMotors, rightMotors);
   private final DriveSubsystem driveSubsystem = new DriveSubsystem(driveTrain);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
+  public RobotContainer(RobotBase robot) {
+    this.robot = robot;
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -57,7 +63,23 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    rightMotors.setInverted(true);
+
+    Joystick leftJoystick = new Joystick(0);
+    Joystick rightJoystick = new Joystick(1);
+    Joystick altJoystick = new Joystick(2);
+
+        driveSubsystem.setDefaultCommand(new RunCommand(
+          () -> {
+              if (robot.isTeleopEnabled()) {
+                  driveSubsystem.joystickDrive(leftJoystick.getY() * xSpeedMultiplier, rightJoystick.getX() * 0.45);
+              } else {
+                  driveSubsystem.drive(0, 0);
+              }
+          },
+          driveSubsystem));
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
