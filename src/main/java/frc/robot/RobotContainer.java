@@ -9,13 +9,16 @@ import static frc.robot.Constants.*;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
@@ -49,6 +52,14 @@ public class RobotContainer {
 
   private final DifferentialDrive driveTrain = new DifferentialDrive(leftMotors, rightMotors);
   private final DriveSubsystem driveSubsystem = new DriveSubsystem(driveTrain);
+
+  // SHOOTER SUBSYSTEM
+  private final CANSparkMax shooterMotor = new CANSparkMax(Shooter.SHOOTER_MOTOR, MotorType.kBrushless);
+  private final ShooterSubsystem shooter = new ShooterSubsystem(shooterMotor);
+
+  //CLIMB SUBSYSTEM
+  private final CANSparkMax climberMotor = new CANSparkMax(Climber.CLIMBER_MOTOR, MotorType.kBrushless);
+  private final ClimbSubsystem climber = new ClimbSubsystem(climberMotor);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(RobotBase robot) {

@@ -17,7 +17,6 @@ public class ShooterSubsystem  extends SubsystemBase {
     private final CANSparkMax shooterMotor;
     private final SparkMaxPIDController shooterController;
     private final RelativeEncoder shooterEncoder;
-    private final Solenoid shooterSolenoid;
 
     private final NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
     private final NetworkTable table = ntInstance.getTable("/components/launcher");
@@ -29,20 +28,15 @@ public class ShooterSubsystem  extends SubsystemBase {
     private double targetRPM = 0;
 
 
-    public ShooterSubsystem(CANSparkMax shooterMotor, RelativeEncoder encoder, Solenoid shooterSolenoid) {
+    public ShooterSubsystem(CANSparkMax shooterMotor) {
         this.shooterMotor = shooterMotor;
         this.shooterController = shooterMotor.getPIDController();
-        this.shooterEncoder = encoder;
-        this.shooterSolenoid = shooterSolenoid;
+        this.shooterEncoder = shooterMotor.getEncoder();
     }
 
     public void shootVelocity(double shooterSpeed) {
         shooterController.setReference(shooterSpeed, ControlType.kVelocity);
         targetRPM = shooterSpeed;
-    }
-
-    public void lowerPiston(){
-        shooterSolenoid.set(false);
     }
 
     @Override
