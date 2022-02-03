@@ -2,13 +2,14 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ClimbSubsystem extends SubsystemBase {
 
-    private final CANSparkMax climberMotor;
+    private final Talon climberMotor;
 
-    public ClimbSubsystem(CANSparkMax climberMotor){
+    public ClimbSubsystem(Talon climberMotor){
         this.climberMotor = climberMotor;
     }
 

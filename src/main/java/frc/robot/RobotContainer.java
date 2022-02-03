@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -58,7 +59,7 @@ public class RobotContainer {
   private final ShooterSubsystem shooter = new ShooterSubsystem(shooterMotor);
 
   //CLIMB SUBSYSTEM
-  private final CANSparkMax climberMotor = new CANSparkMax(Climber.CLIMBER_MOTOR, MotorType.kBrushless);
+  private final Talon climberMotor = new Talon(Climber.CLIMBER_MOTOR);
   private final ClimbSubsystem climber = new ClimbSubsystem(climberMotor);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
