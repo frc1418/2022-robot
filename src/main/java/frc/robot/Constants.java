@@ -39,7 +39,7 @@ public final class Constants {
 
     public static final class Shooter {
         public static final int SHOOTER_MOTOR = 5;
-        public static final int SHOOTER_SOLENOID_PORT = 0;
+        public static final int SHOOTER_SOLENOID_PORT = 6;
     }
 
     public static final class Intake {

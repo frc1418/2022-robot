@@ -8,6 +8,7 @@ import static frc.robot.Constants.*;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -56,7 +57,8 @@ public class RobotContainer {
 
   // SHOOTER SUBSYSTEM
   private final CANSparkMax shooterMotor = new CANSparkMax(Shooter.SHOOTER_MOTOR, MotorType.kBrushless);
-  private final ShooterSubsystem shooter = new ShooterSubsystem(shooterMotor);
+  private final Solenoid shooterSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Shooter.SHOOTER_SOLENOID_PORT);
+  private final ShooterSubsystem shooter = new ShooterSubsystem(shooterMotor, shooterSolenoid);
 
   //CLIMB SUBSYSTEM
   private final Talon climberMotor = new Talon(Climber.CLIMBER_MOTOR);
