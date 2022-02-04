@@ -29,6 +29,11 @@ public final class Constants {
          * Front: 7
          * Back: 8
      * Climber: 9
+     * 
+     * 
+     * Solenoid Ports
+     * 
+     * Shooter: 6
      */
     public static final class DriveTrain {
         public static final int FRONT_LEFT_MOTOR = 3;
