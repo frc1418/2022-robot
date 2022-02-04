@@ -52,8 +52,8 @@ public final class Constants {
     }
 
     public static final class Storage {
-        public static final int STORAGE_FRONT_MOTOR = 7;
-        public static final int STORAGE_BACK_MOTOR = 8;
+        public static final int STORAGE_RIGHT_MOTOR = 7;
+        public static final int STORAGE_LEFT_MOTOR = 8;
     }
 
     public static final class Climber {
