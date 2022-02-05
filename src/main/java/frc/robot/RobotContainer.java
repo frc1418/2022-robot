@@ -21,7 +21,9 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.StorageSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
@@ -68,7 +70,7 @@ public class RobotContainer {
   private final CANSparkMax storageMotorRight = new CANSparkMax(Storage.STORAGE_RIGHT_MOTOR, MotorType.kBrushless);
   private final CANSparkMax storageMotorLeft = new CANSparkMax(Storage.STORAGE_LEFT_MOTOR, MotorType.kBrushless);
   private final MotorControllerGroup storageMotorGroup = new MotorControllerGroup(storageMotorLeft, storageMotorRight);
-  private final StorageSubsystem storage = new StorageSubsystem(storageMotorGroup);
+  private final StorageSubsystem storage = new StorageSubsystem(storageMotorGroup); 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(RobotBase robot) {
     this.robot = robot;
@@ -83,11 +85,27 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    rightMotors.setInverted(true);
+    frontRightMotor.setInverted(true);
 
     Joystick leftJoystick = new Joystick(0);
     Joystick rightJoystick = new Joystick(1);
     Joystick altJoystick = new Joystick(2);
+
+    JoystickButton btnIntakeIn = new JoystickButton(altJoystick, 4);
+    JoystickButton btnIntakeOut = new JoystickButton(altJoystick, 6);
+    JoystickButton btnIntakeSolenoid = new JoystickButton(altJoystick, 2);
+    
+    JoystickButton btnStorageIn = new JoystickButton(altJoystick, 3);
+    JoystickButton btnStorageOut = new JoystickButton(altJoystick, 3);
+    
+    JoystickButton btnShooterSpin = new JoystickButton(altJoystick, 11);
+    JoystickButton btnShooterSolenoid = new JoystickButton(altJoystick, 1);
+
+    JoystickButton btnClimberUp = new JoystickButton(leftJoystick, 2);
+    JoystickButton btnClimberDown = new JoystickButton(rightJoystick, 2);
+    
+    JoystickButton btnSlowMode = new JoystickButton(leftJoystick, 1);
+    JoystickButton btnSlowRotation = new JoystickButton(rightJoystick, 1);
 
         driveSubsystem.setDefaultCommand(new RunCommand(
           () -> {
