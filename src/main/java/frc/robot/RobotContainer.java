@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.ToggleIntakePistonsCommand;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -133,7 +134,7 @@ public class RobotContainer {
         .whileHeld(new InstantCommand(() -> intakeSubsystem.spin(5), intakeSubsystem))
       .whenInactive(new InstantCommand(() -> intakeSubsystem.spin(0), intakeSubsystem), true);
 
-    // btnIntakeSolenoid.toggleWhenPressed(new InstantCommand(() -> intakeSubsystem.setIntakePistons(DoubleSolenoid.Value.kForward)))
+    btnIntakeSolenoid.toggleWhenPressed(new ToggleIntakePistonsCommand(intakeSubsystem));
       
     btnStorageIn
       .whileHeld(new InstantCommand(() -> storageSubsystem.spinVolts(-4), storageSubsystem))
