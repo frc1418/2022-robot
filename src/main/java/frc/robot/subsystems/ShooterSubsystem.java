@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMax.ControlType;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -17,7 +18,7 @@ public class ShooterSubsystem  extends SubsystemBase {
     private final CANSparkMax shooterMotor;
     private final SparkMaxPIDController shooterController;
     private final RelativeEncoder shooterEncoder;
-    private final Solenoid shooterSolenoid;
+    private final DoubleSolenoid shooterSolenoid;
 
     private final NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
     private final NetworkTable table = ntInstance.getTable("/components/launcher");
@@ -29,7 +30,7 @@ public class ShooterSubsystem  extends SubsystemBase {
     private double targetRPM = 0;
 
 
-    public ShooterSubsystem(CANSparkMax shooterMotor, Solenoid shooterSolenoid) {
+    public ShooterSubsystem(CANSparkMax shooterMotor, DoubleSolenoid shooterSolenoid) {
         this.shooterMotor = shooterMotor;
         this.shooterController = shooterMotor.getPIDController();
         this.shooterEncoder = shooterMotor.getEncoder();
@@ -39,6 +40,10 @@ public class ShooterSubsystem  extends SubsystemBase {
     public void shootVelocity(double shooterSpeed) {
         shooterController.setReference(shooterSpeed, ControlType.kVelocity);
         targetRPM = shooterSpeed;
+    }
+
+    public void shootVoltage(double voltage) {
+        shooterMotor.setVoltage(voltage);
     }
 
     @Override
@@ -51,8 +56,8 @@ public class ShooterSubsystem  extends SubsystemBase {
         current.setDouble(this.shooterMotor.getOutputCurrent());
     }
 
-    public void setPiston(boolean position) {
+    public void setPiston(DoubleSolenoid.Value value) {
         // if true, piston should extend
-        shooterSolenoid.set(position);
+        shooterSolenoid.set(value);
     }
 }

@@ -19,4 +19,8 @@ public class StorageSubsystem extends SubsystemBase {
     public void run(double speed) {
         storageMotorGroup.set(speed);
     }
+    
+    public void spinVolts(double voltage) {
+        storageMotorGroup.setVoltage(voltage);
+    }
 }

@@ -6,6 +6,7 @@ package frc.robot;
 
 import static frc.robot.Constants.*;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -18,6 +19,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.StorageSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -48,7 +50,6 @@ public class RobotContainer {
   private final CANSparkMax frontRightMotor = new CANSparkMax(DriveTrain.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
   private final CANSparkMax rearLeftMotor = new CANSparkMax(DriveTrain.REAR_LEFT_MOTOR, MotorType.kBrushless);
   private final CANSparkMax rearRightMotor = new CANSparkMax(DriveTrain.REAR_RIGHT_MOTOR, MotorType.kBrushless);
-  private double xSpeedMultiplier = 0.6;
 
   // DRIVE SUBSYSTEM
   private final MotorControllerGroup leftMotors = new MotorControllerGroup(frontLeftMotor, rearLeftMotor);
@@ -59,18 +60,25 @@ public class RobotContainer {
 
   // SHOOTER SUBSYSTEM
   private final CANSparkMax shooterMotor = new CANSparkMax(Shooter.SHOOTER_MOTOR, MotorType.kBrushless);
-  private final Solenoid shooterSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Shooter.SHOOTER_SOLENOID_PORT);
-  private final ShooterSubsystem shooter = new ShooterSubsystem(shooterMotor, shooterSolenoid);
+  private final DoubleSolenoid shooterSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Shooter.SHOOTER_SOLENOID_FWD, Shooter.SHOOTER_SOLENOID_REV);
+  private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem(shooterMotor, shooterSolenoid);
 
   // CLIMB SUBSYSTEM
   private final TalonFX climberMotor = new TalonFX(Climber.CLIMBER_MOTOR);
-  private final ClimbSubsystem climber = new ClimbSubsystem(climberMotor);
+  private final ClimbSubsystem climbSubsystem = new ClimbSubsystem(climberMotor);
 
   // STORAGE SUBSYSTEM
   private final CANSparkMax storageMotorRight = new CANSparkMax(Storage.STORAGE_RIGHT_MOTOR, MotorType.kBrushless);
   private final CANSparkMax storageMotorLeft = new CANSparkMax(Storage.STORAGE_LEFT_MOTOR, MotorType.kBrushless);
   private final MotorControllerGroup storageMotorGroup = new MotorControllerGroup(storageMotorLeft, storageMotorRight);
-  private final StorageSubsystem storage = new StorageSubsystem(storageMotorGroup); 
+  private final StorageSubsystem storageSubsystem = new StorageSubsystem(storageMotorGroup); 
+ 
+  // INTAKE SUBSYSTEM
+  private final CANSparkMax intakeMotor = new CANSparkMax(Intake.INTAKE_MOTOR, MotorType.kBrushed);
+  private final DoubleSolenoid leftSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Intake.SOLENOID_LEFT_FWD, Intake.SOLENOID_LEFT_REV);
+  private final DoubleSolenoid rightSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Intake.SOLENOID_RIGHT_FWD, Intake.SOLENOID_RIGHT_REV);
+  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem(intakeMotor, leftSolenoid, rightSolenoid);
+ 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(RobotBase robot) {
     this.robot = robot;
@@ -107,15 +115,49 @@ public class RobotContainer {
     JoystickButton btnSlowMode = new JoystickButton(leftJoystick, 1);
     JoystickButton btnSlowRotation = new JoystickButton(rightJoystick, 1);
 
-        driveSubsystem.setDefaultCommand(new RunCommand(
-          () -> {
-              if (robot.isTeleopEnabled()) {
-                  driveSubsystem.joystickDrive(leftJoystick.getY() * xSpeedMultiplier, rightJoystick.getX() * 0.45);
-              } else {
-                  driveSubsystem.drive(0, 0);
-              }
-          },
-          driveSubsystem));
+    driveSubsystem.setDefaultCommand(new RunCommand(
+        () -> {
+          if (robot.isTeleopEnabled()) {
+            driveSubsystem.joystickDrive(leftJoystick.getY(), rightJoystick.getX());
+          } else {
+            driveSubsystem.drive(0, 0);
+          }
+        },
+        driveSubsystem));
+    
+    btnIntakeIn
+        .whileHeld(new InstantCommand(() -> intakeSubsystem.spin(-7), intakeSubsystem))
+        .whenInactive(new InstantCommand(() -> intakeSubsystem.spin(0), intakeSubsystem), true);
+
+    btnIntakeOut
+        .whileHeld(new InstantCommand(() -> intakeSubsystem.spin(5), intakeSubsystem))
+      .whenInactive(new InstantCommand(() -> intakeSubsystem.spin(0), intakeSubsystem), true);
+
+    // btnIntakeSolenoid.toggleWhenPressed(new InstantCommand(() -> intakeSubsystem.setIntakePistons(DoubleSolenoid.Value.kForward)))
+      
+    btnStorageIn
+      .whileHeld(new InstantCommand(() -> storageSubsystem.spinVolts(-4), storageSubsystem))
+      .whenInactive(new InstantCommand(() -> storageSubsystem.spinVolts(0), storageSubsystem), true);
+    
+    btnStorageOut
+      .whileHeld(new InstantCommand(() -> storageSubsystem.spinVolts(4), storageSubsystem))
+      .whenInactive(new InstantCommand(() -> storageSubsystem.spinVolts(0), storageSubsystem), true);
+
+    btnShooterSpin
+      .whenHeld(new InstantCommand(() -> shooterSubsystem.shootVelocity(2100), shooterSubsystem))
+      .whenReleased(new InstantCommand(() -> shooterSubsystem.shootVoltage(0), shooterSubsystem), true);
+
+    btnShooterSolenoid
+      .whenHeld(new InstantCommand(() -> shooterSubsystem.setPiston(DoubleSolenoid.Value.kForward), shooterSubsystem))
+      .whenReleased(new InstantCommand(() -> shooterSubsystem.setPiston(DoubleSolenoid.Value.kReverse), shooterSubsystem), true);
+
+    btnClimberUp
+      .whenHeld(new InstantCommand(() -> climbSubsystem.setWinchMotor(0), climbSubsystem))
+      .whenReleased(new InstantCommand(() -> climbSubsystem.setWinchMotor(0), climbSubsystem), true);
+
+    btnClimberDown
+      .whenHeld(new InstantCommand(() -> climbSubsystem.setWinchMotor(0), climbSubsystem))
+      .whenReleased(new InstantCommand(() -> climbSubsystem.setWinchMotor(0), climbSubsystem), true);
   }
 
   /**

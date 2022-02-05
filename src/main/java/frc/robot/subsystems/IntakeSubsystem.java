@@ -6,12 +6,12 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class IntakeSubystem extends SubsystemBase {
+public class IntakeSubsystem extends SubsystemBase {
     private final CANSparkMax intakeMotor;
     private final DoubleSolenoid leftSolenoid;
     private final DoubleSolenoid rightSolenoid;
 
-    public IntakeSubystem(
+    public IntakeSubsystem(
             CANSparkMax intakeMotor,
             DoubleSolenoid leftSolenoid,
             DoubleSolenoid rightSolenoid) {
