@@ -8,16 +8,16 @@ public class ClimbSubsystem extends SubsystemBase {
 
     private final TalonFX climberMotor;
 
-    public ClimbSubsystem(TalonFX climberMotor){
+    public ClimbSubsystem(TalonFX climberMotor) {
         this.climberMotor = climberMotor;
     }
 
     @Override
-    public void periodic(){
+    public void periodic() {
 
     }
 
-    public void setWinchMotor(double speed){
+    public void setWinchMotor(double speed) {
 
     }
     

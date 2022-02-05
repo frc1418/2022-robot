@@ -60,11 +60,11 @@ public class RobotContainer {
   private final Solenoid shooterSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Shooter.SHOOTER_SOLENOID_PORT);
   private final ShooterSubsystem shooter = new ShooterSubsystem(shooterMotor, shooterSolenoid);
 
-  //CLIMB SUBSYSTEM
+  // CLIMB SUBSYSTEM
   private final TalonFX climberMotor = new TalonFX(Climber.CLIMBER_MOTOR);
   private final ClimbSubsystem climber = new ClimbSubsystem(climberMotor);
 
-  //STORAGE SUBSYSTEM
+  // STORAGE SUBSYSTEM
   private final CANSparkMax storageMotorRight = new CANSparkMax(Storage.STORAGE_RIGHT_MOTOR, MotorType.kBrushless);
   private final CANSparkMax storageMotorLeft = new CANSparkMax(Storage.STORAGE_LEFT_MOTOR, MotorType.kBrushless);
   private final MotorControllerGroup storageMotorGroup = new MotorControllerGroup(storageMotorLeft, storageMotorRight);

@@ -4,12 +4,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubystem extends SubsystemBase {
 
-    public IntakeSubystem(){
+    public IntakeSubystem() {
 
     }
 
     @Override
-    public void periodic(){
+    public void periodic() {
 
     }
     

@@ -44,15 +44,15 @@ public class ShooterSubsystem  extends SubsystemBase {
     @Override
     public void periodic() {
 
-        //sets networkTable values
+        // sets networkTable values
         rpm.setDouble(this.shooterEncoder.getVelocity());
         ntTargetRPM.setDouble(targetRPM);
         output.setDouble(this.shooterMotor.getAppliedOutput());
         current.setDouble(this.shooterMotor.getOutputCurrent());
     }
 
-    public void setPiston(boolean position){
-        //if true, piston should extend
+    public void setPiston(boolean position) {
+        // if true, piston should extend
         shooterSolenoid.set(position);
     }
 }

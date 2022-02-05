@@ -12,11 +12,11 @@ public class StorageSubsystem extends SubsystemBase {
     }
 
     @Override
-    public void periodic(){
+    public void periodic() {
 
     }
 
-    public void run(double speed){
+    public void run(double speed) {
         storageMotorGroup.set(speed);
     }
 }
