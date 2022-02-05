@@ -127,11 +127,11 @@ public class RobotContainer {
         driveSubsystem));
     
     btnIntakeIn
-        .whileHeld(new InstantCommand(() -> intakeSubsystem.spin(-7), intakeSubsystem))
-        .whenInactive(new InstantCommand(() -> intakeSubsystem.spin(0), intakeSubsystem), true);
+      .whileHeld(new InstantCommand(() -> intakeSubsystem.spin(-7), intakeSubsystem))
+      .whenInactive(new InstantCommand(() -> intakeSubsystem.spin(0), intakeSubsystem), true);
 
     btnIntakeOut
-        .whileHeld(new InstantCommand(() -> intakeSubsystem.spin(5), intakeSubsystem))
+      .whileHeld(new InstantCommand(() -> intakeSubsystem.spin(5), intakeSubsystem))
       .whenInactive(new InstantCommand(() -> intakeSubsystem.spin(0), intakeSubsystem), true);
 
     btnIntakeSolenoid.toggleWhenPressed(new ToggleIntakePistonsCommand(intakeSubsystem));

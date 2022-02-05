@@ -33,7 +33,16 @@ public final class Constants {
      * 
      * Solenoid Ports
      * 
-     * Shooter: 6
+     * Shooter:
+         * Forward: 6
+         * Reverse: 7
+     * Intake:
+         * Right:
+             * Forward: 0
+             * Reverse: 1
+         * Left:
+             * Forward: 2
+             * Reverse: 3  
      */
     public static final class DriveTrain {
         public static final int FRONT_LEFT_MOTOR = 3;
@@ -44,14 +53,12 @@ public final class Constants {
 
     public static final class Shooter {
         public static final int SHOOTER_MOTOR = 5;
-        // TODO: Add actual values
         public static final int SHOOTER_SOLENOID_FWD = 6;
         public static final int SHOOTER_SOLENOID_REV = 7;
     }
 
     public static final class Intake {
         public static final int INTAKE_MOTOR = 6;
-        // TODO: Add actual values
         public static final int SOLENOID_RIGHT_FWD = 0;
         public static final int SOLENOID_RIGHT_REV = 1;
         public static final int SOLENOID_LEFT_FWD = 2;
