@@ -23,12 +23,41 @@ public final class Constants {
          * Rear Right: 2
          * Front Left: 3
          * Rear Left: 4
+     * Shooter: 5
+     * Intake: 6
+     * Storage:
+         * Front: 7
+         * Back: 8
+     * Climber: 9
+     * 
+     * 
+     * Solenoid Ports
+     * 
+     * Shooter: 6
      */
     public static final class DriveTrain {
         public static final int FRONT_LEFT_MOTOR = 3;
         public static final int FRONT_RIGHT_MOTOR = 1;
         public static final int REAR_LEFT_MOTOR = 4;
         public static final int REAR_RIGHT_MOTOR = 2;
+    }
+
+    public static final class Shooter {
+        public static final int SHOOTER_MOTOR = 5;
+        public static final int SHOOTER_SOLENOID_PORT = 6;
+    }
+
+    public static final class Intake {
+        public static final int INTAKE_MOTOR = 6;
+    }
+
+    public static final class Storage {
+        public static final int STORAGE_RIGHT_MOTOR = 7;
+        public static final int STORAGE_LEFT_MOTOR = 8;
+    }
+
+    public static final class Climber {
+        public static final int CLIMBER_MOTOR = 9;
     }
 
 }
