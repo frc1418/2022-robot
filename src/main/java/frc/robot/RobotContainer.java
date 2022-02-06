@@ -59,6 +59,9 @@ public class RobotContainer {
   private final DifferentialDrive driveTrain = new DifferentialDrive(leftMotors, rightMotors);
   private final DriveSubsystem driveSubsystem = new DriveSubsystem(driveTrain);
 
+  private final double xSpeedMultiplier = 0.6;
+  private final double xRotationMultiplier = 0.45;
+
   // SHOOTER SUBSYSTEM
   private final CANSparkMax shooterMotor = new CANSparkMax(Shooter.SHOOTER_MOTOR, MotorType.kBrushless);
   private final DoubleSolenoid shooterSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Shooter.SHOOTER_SOLENOID_FWD, Shooter.SHOOTER_SOLENOID_REV);
@@ -119,7 +122,7 @@ public class RobotContainer {
     driveSubsystem.setDefaultCommand(new RunCommand(
         () -> {
           if (robot.isTeleopEnabled()) {
-            driveSubsystem.joystickDrive(leftJoystick.getY(), rightJoystick.getX());
+            driveSubsystem.joystickDrive(leftJoystick.getY() * xSpeedMultiplier, rightJoystick.getX() * xRotationMultiplier);
           } else {
             driveSubsystem.drive(0, 0);
           }
