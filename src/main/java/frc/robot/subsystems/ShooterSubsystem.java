@@ -48,7 +48,6 @@ public class ShooterSubsystem  extends SubsystemBase {
 
     @Override
     public void periodic() {
-
         // sets networkTable values
         rpm.setDouble(this.shooterEncoder.getVelocity());
         ntTargetRPM.setDouble(targetRPM);

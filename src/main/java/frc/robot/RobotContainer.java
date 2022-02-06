@@ -105,7 +105,7 @@ public class RobotContainer {
     JoystickButton btnIntakeSolenoid = new JoystickButton(altJoystick, 2);
     
     JoystickButton btnStorageIn = new JoystickButton(altJoystick, 3);
-    JoystickButton btnStorageOut = new JoystickButton(altJoystick, 3);
+    JoystickButton btnStorageOut = new JoystickButton(altJoystick, 5);
     
     JoystickButton btnShooterSpin = new JoystickButton(altJoystick, 11);
     JoystickButton btnShooterSolenoid = new JoystickButton(altJoystick, 1);
@@ -137,11 +137,11 @@ public class RobotContainer {
     btnIntakeSolenoid.toggleWhenPressed(new ToggleIntakePistonsCommand(intakeSubsystem));
       
     btnStorageIn
-      .whileHeld(new InstantCommand(() -> storageSubsystem.spinVolts(-4), storageSubsystem))
+      .whileHeld(new InstantCommand(() -> storageSubsystem.spinVolts(5), storageSubsystem))
       .whenInactive(new InstantCommand(() -> storageSubsystem.spinVolts(0), storageSubsystem), true);
     
     btnStorageOut
-      .whileHeld(new InstantCommand(() -> storageSubsystem.spinVolts(4), storageSubsystem))
+      .whileHeld(new InstantCommand(() -> storageSubsystem.spinVolts(-4), storageSubsystem))
       .whenInactive(new InstantCommand(() -> storageSubsystem.spinVolts(0), storageSubsystem), true);
 
     btnShooterSpin

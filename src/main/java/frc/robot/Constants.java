@@ -26,8 +26,8 @@ public final class Constants {
      * Shooter: 5
      * Intake: 6
      * Storage:
-         * Front: 7
-         * Back: 8
+         * Right: 7
+         * Left: 8
      * Climber: 9
      * 
      * 
@@ -74,4 +74,5 @@ public final class Constants {
         public static final int CLIMBER_MOTOR = 9;
     }
 
+    public static final int EXTRA_CAN_ID = 25;
 }
