@@ -55,6 +55,7 @@ public final class Constants {
         public static final int SHOOTER_MOTOR = 5;
         public static final int SHOOTER_SOLENOID_FWD = 6;
         public static final int SHOOTER_SOLENOID_REV = 7;
+        public static final int TARMAC_LINE_VEL = 2100;
     }
 
     public static final class Intake {

@@ -63,7 +63,7 @@ public class RobotContainer {
   private final double xRotationMultiplier = 0.45;
 
   // SHOOTER SUBSYSTEM
-  private final CANSparkMax shooterMotor = new CANSparkMax(Shooter.SHOOTER_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax shooterMotor = new CANSparkMax(7, MotorType.kBrushless);
   private final DoubleSolenoid shooterSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Shooter.SHOOTER_SOLENOID_FWD, Shooter.SHOOTER_SOLENOID_REV);
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem(shooterMotor, shooterSolenoid);
 
@@ -98,6 +98,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     frontRightMotor.setInverted(true);
+    storageMotorRight.setInverted(true);
 
     Joystick leftJoystick = new Joystick(0);
     Joystick rightJoystick = new Joystick(1);
@@ -110,7 +111,7 @@ public class RobotContainer {
     JoystickButton btnStorageIn = new JoystickButton(altJoystick, 3);
     JoystickButton btnStorageOut = new JoystickButton(altJoystick, 5);
     
-    JoystickButton btnShooterSpin = new JoystickButton(altJoystick, 11);
+    JoystickButton btnShooterSpin = new JoystickButton(altJoystick, 9);
     JoystickButton btnShooterSolenoid = new JoystickButton(altJoystick, 1);
 
     JoystickButton btnClimberUp = new JoystickButton(leftJoystick, 2);
@@ -140,15 +141,15 @@ public class RobotContainer {
     btnIntakeSolenoid.toggleWhenPressed(new ToggleIntakePistonsCommand(intakeSubsystem));
       
     btnStorageIn
-      .whileHeld(new InstantCommand(() -> storageSubsystem.spinVolts(5), storageSubsystem))
+      .whileHeld(new InstantCommand(() -> storageSubsystem.spinVolts(2.5), storageSubsystem))
       .whenInactive(new InstantCommand(() -> storageSubsystem.spinVolts(0), storageSubsystem), true);
     
     btnStorageOut
-      .whileHeld(new InstantCommand(() -> storageSubsystem.spinVolts(-4), storageSubsystem))
+      .whileHeld(new InstantCommand(() -> storageSubsystem.spinVolts(-1.5), storageSubsystem))
       .whenInactive(new InstantCommand(() -> storageSubsystem.spinVolts(0), storageSubsystem), true);
 
     btnShooterSpin
-      .whenHeld(new InstantCommand(() -> shooterSubsystem.shootVelocity(2100), shooterSubsystem))
+      .whenHeld(new InstantCommand(() -> shooterSubsystem.shootVelocity(Shooter.TARMAC_LINE_VEL), shooterSubsystem))
       .whenReleased(new InstantCommand(() -> shooterSubsystem.shootVoltage(0), shooterSubsystem), true);
 
     btnShooterSolenoid
