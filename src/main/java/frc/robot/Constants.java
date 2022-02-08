@@ -76,4 +76,24 @@ public final class Constants {
     }
 
     public static final int EXTRA_CAN_ID = 25;
+    public static final class Limelight {
+        //UNIT = inches
+        public static final double CAMERA_ELEVATION = 0;
+        public static final double TARGET_ELEVATION = 0;
+        public static final double LIMELIGHT_TO_ROBOT_CENTER = 0;
+        //UNIT = degrees
+        public static final double CAMERA_ANGLE = 14.0;
+
+
+        // LED MODES /limelight/ledMode
+        public static final int LED_MODE_FROM_PIPELINE = 0;
+        public static final int LED_MODE_FORCE_OFF = 1;
+        public static final int LED_MODE_FORCE_BLINK = 2;
+        public static final int LED_MODE_FORCE_ON = 3;
+
+        // pipeline numbers
+        public static final int PIPELINE_TELEOP = 0;
+        public static final int PIPELINE_GET_POS = 1;
+    }
+
 }
