@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 // import frc.robot.common.Limelight;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.Constants.Align;
 
 public abstract class AlignCommand extends CommandBase {
 
@@ -13,7 +14,7 @@ public abstract class AlignCommand extends CommandBase {
     //TODO: NOT real PID values
     private static final double Ki = 0.0;
     private static final double Kd = 0.0;
-    private static double Kp = 0.0;
+    private static final double Kp = 0.0;
 
     protected final PIDController pid = new PIDController(Kp, Ki, Kd);
     protected final DriveSubsystem driveSubsystem;
@@ -28,8 +29,8 @@ public abstract class AlignCommand extends CommandBase {
         SmartDashboard.putData("alignPID", pid);
 
         // Degrees, degrees / second
-        pid.setTolerance(3.5, 0.1);
-        pid.setIntegratorRange(-4, 4);
+        pid.setTolerance(Align.positionTolerance, Align.velocityTolerance);
+        pid.setIntegratorRange(Align.integratorMin, Align.integratorMax);
     }
 
     @Override

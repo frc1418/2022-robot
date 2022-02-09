@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
@@ -7,6 +8,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import frc.robot.Constants;
 import frc.robot.Constants.Limelight;
 
 public class LimelightSubsystem extends SubsystemBase {
@@ -21,10 +23,10 @@ public class LimelightSubsystem extends SubsystemBase {
     private final NetworkTableEntry skew = table.getEntry("ts");
     private final NetworkTableEntry cameraMode = table.getEntry("camMode");
     private final NetworkTableEntry pipeline = table.getEntry("pipeline");
-    private final NetworkTableEntry targetState = table.getEntry("target_state");
     private final NetworkTableEntry poseData = table.getEntry("camtran");
     private final NetworkTableEntry planeDistance = table.getEntry("planeDistance");
     private Pose2d averagePose;
+    private MedianFilter[] averagePoseFilter;
 
     public LimelightSubsystem() {
         yaw.setDefaultDouble(0);
@@ -34,8 +36,13 @@ public class LimelightSubsystem extends SubsystemBase {
         skew.setDefaultDouble(0);
         cameraMode.setDefaultNumber(0);
         pipeline.setDefaultNumber(0);
-        targetState.setDefaultNumber(0);
         poseData.setDefaultDoubleArray(new double[6]);
+        
+        // First in array is x value, then y, then rotation
+        averagePoseFilter = new MedianFilter[3];
+        for(int i = 0; i < averagePoseFilter.length; i++){
+            averagePoseFilter[i] = new MedianFilter(10);
+        }
     }
 
     @Override
@@ -43,7 +50,7 @@ public class LimelightSubsystem extends SubsystemBase {
         if (getPipeline() == Limelight.PIPELINE_GET_POS) {
             Pose2d currentPose = getPose();
             if (currentPose != null) {
-                averagePose = computeAveragePose(averagePose, currentPose);
+                averagePose = computeAveragePose(currentPose);
             }
         }
         planeDistance.setDouble(getPlaneDistance());
@@ -127,16 +134,15 @@ public class LimelightSubsystem extends SubsystemBase {
         double x = 15 * Math.cos(rot.getDegrees()) - data[2];
         double y = 15 * Math.cos(90 - rot.getDegrees()) + data[0];
         // Change unit from inches to meters
-        return new Pose2d(x / 39.37, y / 39.37, rot);
+        return new Pose2d(x / Constants.metersToInches, y / Constants.metersToInches, rot);
     }
 
-    private Pose2d computeAveragePose(Pose2d averagePose, Pose2d newPose) {
-        double averageX =
-                ((9 * averagePose.getTranslation().getX()) + newPose.getTranslation().getX()) / 10;
-        double averageY =
-                ((9 * averagePose.getTranslation().getY()) + newPose.getTranslation().getY()) / 10;
-        double averageRot =
-                ((9 * averagePose.getRotation().getRadians()) + newPose.getRotation().getRadians()) / 10;
+    private Pose2d computeAveragePose(Pose2d newPose) {
+        
+        double averageX = averagePoseFilter[0].calculate(newPose.getTranslation().getX());
+        double averageY = averagePoseFilter[1].calculate(newPose.getTranslation().getY());
+        double averageRot = averagePoseFilter[2].calculate(newPose.getRotation().getRadians());
+
         return new Pose2d(averageX, averageY, new Rotation2d(averageRot));
     }
 
