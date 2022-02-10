@@ -76,4 +76,5 @@ public final class Constants {
     }
 
     public static final int EXTRA_CAN_ID = 25;
+    public static final int EXTRA_CAN_ID_2 = 24;
 }
