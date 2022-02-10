@@ -26,7 +26,9 @@ public class LimelightSubsystem extends SubsystemBase {
     private final NetworkTableEntry poseData = table.getEntry("camtran");
     private final NetworkTableEntry planeDistance = table.getEntry("planeDistance");
     private Pose2d averagePose;
-    private MedianFilter[] averagePoseFilter;
+    private MedianFilter averagePoseXFilter;
+    private MedianFilter averagePoseYFilter;
+    private MedianFilter averagePoseRotFilter;
 
     public LimelightSubsystem() {
         yaw.setDefaultDouble(0);
@@ -37,12 +39,10 @@ public class LimelightSubsystem extends SubsystemBase {
         cameraMode.setDefaultNumber(0);
         pipeline.setDefaultNumber(0);
         poseData.setDefaultDoubleArray(new double[6]);
-        
-        // First in array is x value, then y, then rotation
-        averagePoseFilter = new MedianFilter[3];
-        for(int i = 0; i < averagePoseFilter.length; i++){
-            averagePoseFilter[i] = new MedianFilter(10);
-        }
+
+       averagePoseXFilter = new MedianFilter(10);
+       averagePoseYFilter = new MedianFilter(10);
+       averagePoseRotFilter = new MedianFilter(10);
     }
 
     @Override
@@ -139,9 +139,9 @@ public class LimelightSubsystem extends SubsystemBase {
 
     private Pose2d computeAveragePose(Pose2d newPose) {
         
-        double averageX = averagePoseFilter[0].calculate(newPose.getTranslation().getX());
-        double averageY = averagePoseFilter[1].calculate(newPose.getTranslation().getY());
-        double averageRot = averagePoseFilter[2].calculate(newPose.getRotation().getRadians());
+        double averageX = averagePoseXFilter.calculate(newPose.getTranslation().getX());
+        double averageY = averagePoseYFilter.calculate(newPose.getTranslation().getY());
+        double averageRot = averagePoseRotFilter.calculate(newPose.getRotation().getRadians());
 
         return new Pose2d(averageX, averageY, new Rotation2d(averageRot));
     }
