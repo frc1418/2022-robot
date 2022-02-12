@@ -5,9 +5,9 @@ import static frc.robot.Constants.*;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -26,17 +26,7 @@ public class FollowTrajectoryCommand extends SequentialCommandGroup {
     private NetworkTableEntry leftVoltage = table.getEntry("leftVoltage");
     private NetworkTableEntry rightMeasurement = table.getEntry("rightMeasurment");
     private NetworkTableEntry rightReference = table.getEntry("rightReference");
-    private NetworkTableEntry rightVoltage = table.getEntry("leftVoltage");
-
-    public FollowTrajectoryCommand(
-            Trajectory trajectory, Odometry odometry, DriveSubsystem driveSubsystem) {
-        this(trajectory, odometry, driveSubsystem, true);
-
-        leftMeasurement.setDefaultDouble(0);
-        leftReference.setDefaultDouble(0);
-        rightMeasurement.setDefaultDouble(0);
-        rightReference.setDefaultDouble(0);
-    }
+    private NetworkTableEntry rightVoltage = table.getEntry("rightVoltage");
 
     public FollowTrajectoryCommand(
             Trajectory trajectory,
@@ -57,8 +47,8 @@ public class FollowTrajectoryCommand extends SequentialCommandGroup {
                         trajectory,
                         odometry::getPose,
                         ramseteController,
-                        new SimpleMotorFeedforward(DRIVE_KS, DRIVE_KV, DRIVE_KA),
-                        DriveSubsystem.KINEMATICS,
+                        new SimpleMotorFeedforward(DriveTrain.KS, DriveTrain.KV, DriveTrain.KA),
+                        DriveTrain.KINEMATICS,
                         odometry::getWheelSpeeds,
                         leftController,
                         rightController,
@@ -82,6 +72,10 @@ public class FollowTrajectoryCommand extends SequentialCommandGroup {
         super.initialize();
         if (resetOdometry) {
             odometry.reset(trajectory.getInitialPose());
+            leftMeasurement.setDefaultDouble(0);
+            leftReference.setDefaultDouble(0);
+            rightMeasurement.setDefaultDouble(0);
+            rightReference.setDefaultDouble(0);
         }
     }
 }

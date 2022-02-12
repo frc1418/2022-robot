@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -49,6 +52,24 @@ public final class Constants {
         public static final int FRONT_RIGHT_MOTOR = 1;
         public static final int REAR_LEFT_MOTOR = 4;
         public static final int REAR_RIGHT_MOTOR = 2;
+        
+        // TODO: Find actual values for below constants:
+        public static final double DRIVE_GEARING = 7.56;  // Meters
+    public static final double DRIVE_WHEEL_DIAMETER = 0.1524;  // Meters
+    public static final double DRIVE_ENCODER_CONSTANT = (1 / DRIVE_GEARING) * DRIVE_WHEEL_DIAMETER * Math.PI;
+
+    // DriveSubsystem constants
+    private static final double METERS_PER_ROTATION = 0.4787787;  // Meters
+    public static final double TRACK_WIDTH = 0.53;  // Meters
+    public static final double WHEEL_BASE = 0.5969;  // Meters
+    // public static final double DRIVE_KS = 0.383;  // Volts
+    // public static final double DRIVE_KV = 2.02;  // Volt seconds per meter
+    // public static final double DRIVE_KA = 0.529;  // Volt seconds squared per meter
+    public static final double KS = 0.268;  // Volts
+    public static final double KV = 1.99;  // Volt seconds per meter
+    public static final double KA = 0.504;  // Volt seconds squared per meter
+        public static final DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH);
+        public static final SimpleMotorFeedforward FEED_FORWARD = new SimpleMotorFeedforward(KS, KV, KA);
     }
 
     public static final class Shooter {

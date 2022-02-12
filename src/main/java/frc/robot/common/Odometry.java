@@ -1,36 +1,35 @@
-package frc.common;
+package frc.robot.common;
 
-import static frc.robot.Constants.*;
+import static frc.robot.Constants.DriveTrain;
 
-import com.revrobotics.CANEncoder;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
+import com.revrobotics.RelativeEncoder;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 
 public class Odometry {
     private final DifferentialDriveOdometry odometry;
     private final Gyro gyro;
-    private final CANEncoder leftEncoder;
-    private final CANEncoder rightEncoder;
+    private final RelativeEncoder leftEncoder;
+    private final RelativeEncoder rightEncoder;
 
     public Odometry(
             Gyro gyro,
             DifferentialDriveOdometry odometry,
-            CANEncoder leftEncoder,
-            CANEncoder rightEncoder) {
+            RelativeEncoder leftEncoder,
+            RelativeEncoder rightEncoder) {
         this.gyro = gyro;
         this.odometry = odometry;
         this.leftEncoder = leftEncoder;
         this.rightEncoder = rightEncoder;
 
-        // this.leftEncoder.setInverted(true);
+        leftEncoder.setPositionConversionFactor(DriveTrain.DRIVE_ENCODER_CONSTANT);
+        leftEncoder.setVelocityConversionFactor(DriveTrain.DRIVE_ENCODER_CONSTANT / 60);
 
-        leftEncoder.setPositionConversionFactor(DRIVE_ENCODER_CONSTANT);
-        leftEncoder.setVelocityConversionFactor(DRIVE_ENCODER_CONSTANT / 60);
-
-        rightEncoder.setPositionConversionFactor(DRIVE_ENCODER_CONSTANT);
-        rightEncoder.setVelocityConversionFactor(DRIVE_ENCODER_CONSTANT / 60);
+        rightEncoder.setPositionConversionFactor(DriveTrain.DRIVE_ENCODER_CONSTANT);
+        rightEncoder.setVelocityConversionFactor(DriveTrain.DRIVE_ENCODER_CONSTANT / 60);
 
         resetEncoders();
     }
@@ -43,11 +42,11 @@ public class Odometry {
         return (leftEncoder.getPosition() + -rightEncoder.getPosition()) / 2.0;
     }
 
-    public CANEncoder getLeftEncoder() {
+    public RelativeEncoder getLeftEncoder() {
         return leftEncoder;
     }
 
-    public CANEncoder getRightEncoder() {
+    public RelativeEncoder getRightEncoder() {
         return rightEncoder;
     }
 
