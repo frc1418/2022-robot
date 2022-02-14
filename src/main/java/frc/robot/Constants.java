@@ -77,8 +77,7 @@ public final class Constants {
     public static final class Climber {
         public static final int CLIMBER_MOTOR = 9;
     }
-
-    public static final int EXTRA_CAN_ID = 25;
+  
     public static final class Limelight {
         // UNIT = inches
         public static final double CAMERA_ELEVATION = 0;
@@ -99,12 +98,14 @@ public final class Constants {
         public static final int PIPELINE_GET_POS = 1;
     }
 
-    public static final class Align{
+    public static final class Align {
         public static final double positionTolerance = 3.5;
         public static final double velocityTolerance = 0.1;
     
         public static final double integratorMin = -4.0;
         public static final double integratorMax = 4.0;
     }
-
+  
+    public static final int EXTRA_CAN_ID = 25;
+    public static final int EXTRA_CAN_ID_2 = 24;
 }
