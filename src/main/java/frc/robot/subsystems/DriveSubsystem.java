@@ -32,6 +32,9 @@ public class DriveSubsystem extends SubsystemBase {
     private final NetworkTable table = ntInstance.getTable("/common/Odometry");
     private final NetworkTableEntry odometryPose = table.getEntry("odometryPose");
     private final NetworkTableEntry encoderPosition = table.getEntry("encoderPose");
+    private final NetworkTableEntry leftEncoderPosition = table.getEntry("leftEncoderPos");
+    private final NetworkTableEntry rightEncoderPosition = table.getEntry("rightEncoderPos");
+
     private final NetworkTableEntry time = table.getEntry("time");
 
     public DriveSubsystem(DifferentialDrive driveTrain, MotorControllerGroup leftMotors, MotorControllerGroup rightMotors, Odometry odometry, Field2d field, Timer timer) {
@@ -76,5 +79,7 @@ public class DriveSubsystem extends SubsystemBase {
         odometry.update();
         encoderPosition.setDouble(odometry.getAverageEncoderDistance());
         time.setDouble(timer.get());
+        leftEncoderPosition.setDouble(odometry.getLeftEncoderDistance());
+        rightEncoderPosition.setDouble(odometry.getRightEncoderDistance());
     }
 }

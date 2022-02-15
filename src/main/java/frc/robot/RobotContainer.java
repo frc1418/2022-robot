@@ -134,6 +134,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     frontRightMotor.setInverted(true);
     storageMotorRight.setInverted(true);
+    leftEncoder.setInverted(true);
+    rightEncoder.setInverted(true);
 
     Joystick leftJoystick = new Joystick(0);
     Joystick rightJoystick = new Joystick(1);

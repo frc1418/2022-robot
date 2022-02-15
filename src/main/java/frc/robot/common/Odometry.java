@@ -39,7 +39,14 @@ public class Odometry {
     }
 
     public double getAverageEncoderDistance() {
-        return (leftEncoder.getPosition() + -rightEncoder.getPosition()) / 2.0;
+        return (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2.0;
+    }
+
+    public double getLeftEncoderDistance() {
+        return leftEncoder.getPosition();
+    }
+    public double getRightEncoderDistance() {
+        return rightEncoder.getPosition();
     }
 
     public RelativeEncoder getLeftEncoder() {
