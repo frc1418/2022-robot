@@ -62,6 +62,9 @@ public class RobotContainer {
   private final double xSpeedMultiplier = 0.6;
   private final double xRotationMultiplier = 0.45;
 
+  private final double xSpeedMultiplierSlow = xSpeedMultiplier * 0.2;
+  private final double xRotationMultiplierSlow = xRotationMultiplier * 0.2;
+
   // SHOOTER SUBSYSTEM
   private final CANSparkMax shooterMotor = new CANSparkMax(Shooter.SHOOTER_MOTOR, MotorType.kBrushless);
   private final DoubleSolenoid shooterSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Shooter.SHOOTER_SOLENOID_FWD, Shooter.SHOOTER_SOLENOID_REV);
