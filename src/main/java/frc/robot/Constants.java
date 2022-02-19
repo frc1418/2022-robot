@@ -99,11 +99,11 @@ public final class Constants {
   
     public static final class Limelight {
         // UNIT = inches
-        public static final double CAMERA_ELEVATION = 0;
-        public static final double TARGET_ELEVATION = 0;
-        public static final double LIMELIGHT_TO_ROBOT_CENTER = 0;
+        public static final double CAMERA_ELEVATION = 30.75; // TEST BOT
+        public static final double TARGET_ELEVATION = 258; // TEST BOT
+        public static final double LIMELIGHT_TO_ROBOT_CENTER = 9; // TEST BOT
         // UNIT = degrees
-        public static final double CAMERA_ANGLE = 14.0;
+        public static final double CAMERA_ANGLE = 0; // TEST BOT
 
 
         // LED MODES /limelight/ledMode
