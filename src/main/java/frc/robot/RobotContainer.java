@@ -172,28 +172,26 @@ public class RobotContainer {
       .whenHeld(new InstantCommand(() -> climbSubsystem.setWinchMotor(0), climbSubsystem))
       .whenReleased(new InstantCommand(() -> climbSubsystem.setWinchMotor(0), climbSubsystem), true);
 
-      // makes both rotation and speed slower
+    // makes both rotation and speed slower
     btnSlowMode.whenPressed(new InstantCommand(() -> {
       if (xSpeedMultiplier == xSpeedMultiplierNormal)
       {
         xSpeedMultiplier = xSpeedMultiplierSlow;
+        xRotationMultiplier = xRotationMultiplierSlow;
       }
       else
       {
         xSpeedMultiplier = xSpeedMultiplierNormal;
+        xRotationMultiplier = xRotationMultiplierNormal;
       }
     })); 
 
     // just makes rotation slower
     btnSlowRotation.whenPressed(new InstantCommand(() -> {
       if (xRotationMultiplier == xRotationMultiplierNormal)
-      {
         xRotationMultiplier = xRotationMultiplierSlow;
-      }
       else
-      {
         xRotationMultiplier = xRotationMultiplierNormal;
-      }
     }));
   }
 
