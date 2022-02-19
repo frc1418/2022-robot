@@ -59,11 +59,14 @@ public class RobotContainer {
   private final DifferentialDrive driveTrain = new DifferentialDrive(leftMotors, rightMotors);
   private final DriveSubsystem driveSubsystem = new DriveSubsystem(driveTrain);
 
-  private final double xSpeedMultiplier = 0.6;
-  private final double xRotationMultiplier = 0.45;
+  private final double xSpeedMultiplierNormal = 0.6;
+  private final double xRotationMultiplierNormal = 0.45;
 
-  private final double xSpeedMultiplierSlow = xSpeedMultiplier * 0.2;
-  private final double xRotationMultiplierSlow = xRotationMultiplier * 0.2;
+  private final double xSpeedMultiplierSlow = xSpeedMultiplierNormal * 0.2;
+  private final double xRotationMultiplierSlow = xRotationMultiplierNormal * 0.2;
+
+  private double xSpeedMultiplier = xSpeedMultiplierNormal;
+  private double xRotationMultiplier = xRotationMultiplierNormal;
 
   // SHOOTER SUBSYSTEM
   private final CANSparkMax shooterMotor = new CANSparkMax(Shooter.SHOOTER_MOTOR, MotorType.kBrushless);
@@ -123,6 +126,8 @@ public class RobotContainer {
     JoystickButton btnSlowMode = new JoystickButton(leftJoystick, 1);
     JoystickButton btnSlowRotation = new JoystickButton(rightJoystick, 1);
 
+    
+
     driveSubsystem.setDefaultCommand(new RunCommand(
         () -> {
           if (robot.isTeleopEnabled()) {
@@ -166,6 +171,30 @@ public class RobotContainer {
     btnClimberDown
       .whenHeld(new InstantCommand(() -> climbSubsystem.setWinchMotor(0), climbSubsystem))
       .whenReleased(new InstantCommand(() -> climbSubsystem.setWinchMotor(0), climbSubsystem), true);
+
+      // makes both rotation and speed slower
+    btnSlowMode.whenPressed(new InstantCommand(() -> {
+      if (xSpeedMultiplier == xSpeedMultiplierNormal)
+      {
+        xSpeedMultiplier = xSpeedMultiplierSlow;
+      }
+      else
+      {
+        xSpeedMultiplier = xSpeedMultiplierNormal;
+      }
+    })); 
+
+    // just makes rotation slower
+    btnSlowRotation.whenPressed(new InstantCommand(() -> {
+      if (xRotationMultiplier == xRotationMultiplierNormal)
+      {
+        xRotationMultiplier = xRotationMultiplierSlow;
+      }
+      else
+      {
+        xRotationMultiplier = xRotationMultiplierNormal;
+      }
+    }));
   }
 
   /**
