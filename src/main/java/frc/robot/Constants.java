@@ -95,6 +95,9 @@ public final class Constants {
 
     public static final class Climber {
         public static final int CLIMBER_MOTOR = 9;
+
+        public static final int MEDIUM_RUNG_POS = 0;
+        public static final int LOWER_RUNG_POS = 0;
     }
   
     public static final class Limelight {

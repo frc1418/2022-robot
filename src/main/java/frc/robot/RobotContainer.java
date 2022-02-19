@@ -129,10 +129,6 @@ public class RobotContainer {
   private final DoubleSolenoid leftSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Intake.SOLENOID_LEFT_FWD, Intake.SOLENOID_LEFT_REV);
   private final DoubleSolenoid rightSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Intake.SOLENOID_RIGHT_FWD, Intake.SOLENOID_RIGHT_REV);
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem(intakeMotor, leftSolenoid, rightSolenoid);
- 
-  // TRAJECTORIES
-  private final TrajectoryLoader trajectoryLoader = new TrajectoryLoader();
-  private final HashMap<String, Trajectory> trajectories = trajectoryLoader.loadTrajectories();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(RobotBase robot) {
@@ -149,6 +145,10 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    frontRightMotor.setInverted(true);
+    storageMotorLeft.setInverted(true);
+    shooterMotor.setInverted(true);
+
     Joystick leftJoystick = new Joystick(0);
     Joystick rightJoystick = new Joystick(1);
     Joystick altJoystick = new Joystick(2);
@@ -163,11 +163,12 @@ public class RobotContainer {
     JoystickButton btnShooterSpin = new JoystickButton(altJoystick, 9);
     JoystickButton btnShooterSolenoid = new JoystickButton(altJoystick, 1);
 
-    JoystickButton btnClimberUp = new JoystickButton(leftJoystick, 2);
-    JoystickButton btnClimberDown = new JoystickButton(rightJoystick, 2);
+    JoystickButton btnClimberMiddle = new JoystickButton(rightJoystick, 3);
+    JoystickButton btnClimberLower = new JoystickButton(rightJoystick, 2);
+    JoystickButton btnClimberDown = new JoystickButton(rightJoystick, 1);
     
-    JoystickButton btnSlowMode = new JoystickButton(leftJoystick, 1);
-    JoystickButton btnSlowRotation = new JoystickButton(rightJoystick, 1);
+    JoystickButton btnSlowMode = new JoystickButton(leftJoystick, 2);
+    JoystickButton btnSlowRotation = new JoystickButton(leftJoystick, 3);
 
     driveSubsystem.setDefaultCommand(new RunCommand(
         () -> {
@@ -180,7 +181,7 @@ public class RobotContainer {
         driveSubsystem));
     
     btnIntakeIn
-      .whileHeld(new InstantCommand(() -> intakeSubsystem.spin(-7), intakeSubsystem))
+      .whileHeld(new InstantCommand(() -> intakeSubsystem.spin(-5), intakeSubsystem))
       .whenInactive(new InstantCommand(() -> intakeSubsystem.spin(0), intakeSubsystem), true);
 
     btnIntakeOut
@@ -193,27 +194,31 @@ public class RobotContainer {
     }));
       
     btnStorageIn
-      .whileHeld(new InstantCommand(() -> storageSubsystem.spinVolts(2.5), storageSubsystem))
+      .whileHeld(new InstantCommand(() -> storageSubsystem.spinVolts(3), storageSubsystem))
       .whenInactive(new InstantCommand(() -> storageSubsystem.spinVolts(0), storageSubsystem), true);
     
     btnStorageOut
-      .whileHeld(new InstantCommand(() -> storageSubsystem.spinVolts(-1.5), storageSubsystem))
+      .whileHeld(new InstantCommand(() -> storageSubsystem.spinVolts(-3), storageSubsystem))
       .whenInactive(new InstantCommand(() -> storageSubsystem.spinVolts(0), storageSubsystem), true);
 
     btnShooterSpin
-      .whileHeld(new InstantCommand(() -> shooterSubsystem.shootVelocity(2100), shooterSubsystem))
+      .whileHeld(new InstantCommand(() -> shooterSubsystem.shootVelocity(Shooter.TARMAC_LINE_VEL), shooterSubsystem))
       .whenReleased(new InstantCommand(() -> shooterSubsystem.shootVoltage(0), shooterSubsystem), true);
 
     btnShooterSolenoid
       .whenHeld(new InstantCommand(() -> shooterSubsystem.setPiston(DoubleSolenoid.Value.kForward), shooterSubsystem))
       .whenReleased(new InstantCommand(() -> shooterSubsystem.setPiston(DoubleSolenoid.Value.kReverse), shooterSubsystem), true);
 
-    btnClimberUp
-      .whenHeld(new InstantCommand(() -> climbSubsystem.setWinchMotor(0), climbSubsystem))
+    btnClimberMiddle
+      .whenHeld(new InstantCommand(() -> climbSubsystem.setWinchMotor(Climber.MEDIUM_RUNG_POS), climbSubsystem))
+      .whenReleased(new InstantCommand(() -> climbSubsystem.setWinchMotor(0), climbSubsystem), true);
+
+    btnClimberLower
+      .whenHeld(new InstantCommand(() -> climbSubsystem.setWinchMotor(Climber.LOWER_RUNG_POS), climbSubsystem))
       .whenReleased(new InstantCommand(() -> climbSubsystem.setWinchMotor(0), climbSubsystem), true);
 
     btnClimberDown
-      .whenHeld(new InstantCommand(() -> climbSubsystem.setWinchMotor(0), climbSubsystem))
+      .whenHeld(new InstantCommand(() -> climbSubsystem.setWinchPos(0), climbSubsystem))
       .whenReleased(new InstantCommand(() -> climbSubsystem.setWinchMotor(0), climbSubsystem), true);
 
     // makes both rotation and speed slower
