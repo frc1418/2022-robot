@@ -126,8 +126,6 @@ public class RobotContainer {
     JoystickButton btnSlowMode = new JoystickButton(leftJoystick, 1);
     JoystickButton btnSlowRotation = new JoystickButton(rightJoystick, 1);
 
-    
-
     driveSubsystem.setDefaultCommand(new RunCommand(
         () -> {
           if (robot.isTeleopEnabled()) {
