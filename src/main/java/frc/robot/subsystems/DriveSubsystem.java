@@ -50,7 +50,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void joystickDrive(double speed, double rotation) {
         driveTrain.setDeadband(RobotDriveBase.kDefaultDeadband);
-        driveTrain.arcadeDrive(speed, rotation);
+        driveTrain.arcadeDrive(-speed, rotation);
     }
 
     /**

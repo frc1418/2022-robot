@@ -34,6 +34,7 @@ public class TrajectoryLoader {
             } catch (IOException ex) {
             }
         }
+        System.out.println("FOUND " + trajectories.size() + " TRAJECTORIES");
         return trajectories;
     }
 }

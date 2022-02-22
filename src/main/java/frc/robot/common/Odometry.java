@@ -5,6 +5,7 @@ import static frc.robot.Constants.DriveTrain;
 import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
@@ -35,7 +36,7 @@ public class Odometry {
     }
 
     public void update() {
-        odometry.update(gyro.getRotation2d(), leftEncoder.getPosition(), -rightEncoder.getPosition());
+        odometry.update(gyro.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
     }
 
     public double getAverageEncoderDistance() {
@@ -58,7 +59,7 @@ public class Odometry {
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        return new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity(), -rightEncoder.getVelocity());
+        return new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity(), rightEncoder.getVelocity());
     }
 
     public Pose2d getPose() {
@@ -85,5 +86,8 @@ public class Odometry {
 
     public double getTurnRate() {
         return -gyro.getRate();
+    }
+    public Rotation2d getRotation2d() {
+        return gyro.getRotation2d();
     }
 }

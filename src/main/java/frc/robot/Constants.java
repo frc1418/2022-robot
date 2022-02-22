@@ -49,24 +49,23 @@ public final class Constants {
              * Reverse: 3  
      */
     public static final class DriveTrain {
-        public static final int FRONT_LEFT_MOTOR = 3;
-        public static final int FRONT_RIGHT_MOTOR = 1;
-        public static final int REAR_LEFT_MOTOR = 4;
-        public static final int REAR_RIGHT_MOTOR = 2;
+        public static final int FRONT_LEFT_MOTOR = 1;
+        public static final int FRONT_RIGHT_MOTOR = 3;
+        public static final int REAR_LEFT_MOTOR = 2;
+        public static final int REAR_RIGHT_MOTOR = 4;
         
-        public static final double DRIVE_GEARING = 10.75;  // There is a chance this is actually 10.71
+        public static final double DRIVE_GEARING = 10.71;
         public static final double DRIVE_WHEEL_DIAMETER = Units.inchesToMeters(6);  // Meters
         public static final double DRIVE_ENCODER_CONSTANT = (1 / DRIVE_GEARING) * DRIVE_WHEEL_DIAMETER * Math.PI;
 
         // DriveSubsystem constants
         private static final double METERS_PER_ROTATION = Math.PI * DRIVE_WHEEL_DIAMETER;  // Meters
-        public static final double TRACK_WIDTH = 0.655;  // Meters
+        public static final double TRACK_WIDTH = 3.6864;  // Meters (This value was given by SysID)
         public static final double WHEEL_BASE = 0.4469;  // Meters
 
-        // TODO: Characterize Robot to find actual values (these are from 2021)
-        public static final double KS = 0.268;  // Volts
-        public static final double KV = 1.99;  // Volt seconds per meter
-        public static final double KA = 0.504;  // Volt seconds squared per meter
+        public static final double KS = 0.18508;  // Volts
+        public static final double KV = 2.8169;  // Volt seconds per meter
+        public static final double KA = 0.30949;  // Volt seconds squared per meter
         public static final DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH);
         public static final SimpleMotorFeedforward FEED_FORWARD = new SimpleMotorFeedforward(KS, KV, KA);
     }
@@ -80,8 +79,8 @@ public final class Constants {
 
     public static final class Intake {
         public static final int INTAKE_MOTOR = 6;
-        public static final int SOLENOID_RIGHT_FWD = 0;
-        public static final int SOLENOID_RIGHT_REV = 1;
+        public static final int SOLENOID_RIGHT_FWD = 1;
+        public static final int SOLENOID_RIGHT_REV = 0;
         public static final int SOLENOID_LEFT_FWD = 2;
         public static final int SOLENOID_LEFT_REV = 3;
     }

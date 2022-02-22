@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ToggleIntakePistonsCommand;
 import frc.robot.commands.autonomous.ChargeCommand;
+import frc.robot.commands.autonomous.SlalomCommand;
 import frc.robot.common.Odometry;
 import frc.robot.common.TrajectoryLoader;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -72,7 +73,7 @@ public class RobotContainer {
 
 
   // ODOMETRY
-  private final Gyro gyro = new AHRS(SPI.Port.kMXP);
+  private final AHRS gyro = new AHRS(SPI.Port.kMXP);
 
   private final RelativeEncoder leftEncoder = frontLeftMotor.getEncoder();
   private final RelativeEncoder rightEncoder = frontRightMotor.getEncoder();
@@ -94,7 +95,7 @@ public class RobotContainer {
   private final double xRotationMultiplier = 0.45;
 
   // SHOOTER SUBSYSTEM
-  private final CANSparkMax shooterMotor = new CANSparkMax(Shooter.SHOOTER_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax shooterMotor = new CANSparkMax(EXTRA_CAN_ID, MotorType.kBrushless);
   private final DoubleSolenoid shooterSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Shooter.SHOOTER_SOLENOID_FWD, Shooter.SHOOTER_SOLENOID_REV);
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem(shooterMotor, shooterSolenoid);
 
@@ -123,6 +124,7 @@ public class RobotContainer {
     this.robot = robot;
     // Configure the button bindings
     configureButtonBindings();
+    configureObjects();
   }
 
   /**
@@ -132,11 +134,6 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    frontRightMotor.setInverted(true);
-    storageMotorRight.setInverted(true);
-    leftEncoder.setInverted(true);
-    rightEncoder.setInverted(true);
-
     Joystick leftJoystick = new Joystick(0);
     Joystick rightJoystick = new Joystick(1);
     Joystick altJoystick = new Joystick(2);
@@ -160,7 +157,6 @@ public class RobotContainer {
     driveSubsystem.setDefaultCommand(new RunCommand(
         () -> {
           if (robot.isTeleopEnabled()) {
-            System.out.println(leftJoystick.getY());
             driveSubsystem.joystickDrive(leftJoystick.getY() * xSpeedMultiplier, rightJoystick.getX() * xRotationMultiplier);
           } else {
             driveSubsystem.drive(0, 0);
@@ -176,7 +172,10 @@ public class RobotContainer {
       .whileHeld(new InstantCommand(() -> intakeSubsystem.spin(5), intakeSubsystem))
       .whenInactive(new InstantCommand(() -> intakeSubsystem.spin(0), intakeSubsystem), true);
 
-    btnIntakeSolenoid.toggleWhenPressed(new ToggleIntakePistonsCommand(intakeSubsystem));
+    btnIntakeSolenoid.whenPressed(new InstantCommand(() -> {
+      leftSolenoid.toggle();
+      rightSolenoid.toggle();
+    }));
       
     btnStorageIn
       .whileHeld(new InstantCommand(() -> storageSubsystem.spinVolts(2.5), storageSubsystem))
@@ -187,7 +186,7 @@ public class RobotContainer {
       .whenInactive(new InstantCommand(() -> storageSubsystem.spinVolts(0), storageSubsystem), true);
 
     btnShooterSpin
-      .whenHeld(new InstantCommand(() -> shooterSubsystem.shootVelocity(Shooter.TARMAC_LINE_VEL), shooterSubsystem))
+      .whileHeld(new InstantCommand(() -> shooterSubsystem.shootVoltage(5), shooterSubsystem))
       .whenReleased(new InstantCommand(() -> shooterSubsystem.shootVoltage(0), shooterSubsystem), true);
 
     btnShooterSolenoid
@@ -204,11 +203,19 @@ public class RobotContainer {
   }
   
   public void configureObjects() {
-    frontLeftMotor.setIdleMode(IdleMode.kBrake);
     frontRightMotor.setIdleMode(IdleMode.kBrake);
-    rearLeftMotor.setIdleMode(IdleMode.kBrake);
+    frontLeftMotor.setIdleMode(IdleMode.kBrake);
     rearRightMotor.setIdleMode(IdleMode.kBrake);
+    rearLeftMotor.setIdleMode(IdleMode.kBrake);
 
+    frontRightMotor.setInverted(true);
+    frontLeftMotor.setInverted(false);
+    rearRightMotor.setInverted(true);
+    rearLeftMotor.setInverted(false);
+    
+    storageMotorLeft.setInverted(true);
+    storageMotorRight.setInverted(false);
+    
     odometry.zeroHeading();
   }
 
@@ -220,7 +227,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     odometry.zeroHeading();
-    return new ChargeCommand(driveSubsystem, odometry, trajectories);
+    return new SlalomCommand(driveSubsystem, odometry, trajectories);
   }
   
   public Timer getTimer() {

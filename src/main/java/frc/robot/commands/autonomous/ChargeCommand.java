@@ -16,8 +16,6 @@ public class ChargeCommand extends SequentialCommandGroup{
         Trajectory charge = trajectories.get(TRAJECTORY_NAME);
 
         addCommands(
-            new PrintCommand("BEGINING CHARGE"),
-            new FollowTrajectoryCommand(charge, odometry, driveSubsystem, true),
-            new PrintCommand("ENDING CHARGE"));
+            new FollowTrajectoryCommand(charge, odometry, driveSubsystem, true));
     }
 }
