@@ -65,10 +65,7 @@ public class RobotContainer {
   private final double xSpeedMultiplierSlow = xSpeedMultiplierNormal * 0.2;
   private final double xRotationMultiplierSlow = xRotationMultiplierNormal * 0.2;
 
-  private double xSpeedMultiplier = xSpeedMultiplierNormal;
-  private double xRotationMultiplier = xRotationMultiplierNormal;
-
-  private boolean slowModeEnabled = false;
+  private boolean slowSpeedEnabled = false;
   private boolean slowRotationEnabled = false;
 
   // SHOOTER SUBSYSTEM
@@ -175,7 +172,8 @@ public class RobotContainer {
 
     // makes both rotation and speed slower
     btnSlowMode.whenPressed(new InstantCommand(() -> {
-      slowModeEnabled = !slowModeEnabled;
+      slowSpeedEnabled = !slowSpeedEnabled;
+      slowRotationEnabled = !slowRotationEnabled;
     })); 
 
     // just makes rotation slower
@@ -186,26 +184,18 @@ public class RobotContainer {
 
   private double getSpeedMultiplier()
   {
-    if (slowModeEnabled)
-    {
-      xSpeedMultiplier = xSpeedMultiplierSlow;
-      xRotationMultiplier = xRotationMultiplierSlow;
-    }
+    if (slowSpeedEnabled)
+      return xSpeedMultiplierSlow;
     else
-    {
-      xSpeedMultiplier = xSpeedMultiplierNormal;
-      xRotationMultiplier = xRotationMultiplierNormal;
-    }
-    return xSpeedMultiplier;
+      return xSpeedMultiplierNormal;
   }
 
   private double getRotationMultiplier()
   {
     if (slowRotationEnabled)
-      xRotationMultiplier = xRotationMultiplierSlow;
+      return xRotationMultiplierSlow;
     else
-      xRotationMultiplier = xRotationMultiplierNormal;
-    return xRotationMultiplier;
+      return xRotationMultiplierNormal;
   }
 
   /**
