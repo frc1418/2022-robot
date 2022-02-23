@@ -68,6 +68,9 @@ public class RobotContainer {
   private double xSpeedMultiplier = xSpeedMultiplierNormal;
   private double xRotationMultiplier = xRotationMultiplierNormal;
 
+  private boolean slowModeEnabled = false;
+  private boolean slowRotationEnabled = false;
+
   // SHOOTER SUBSYSTEM
   private final CANSparkMax shooterMotor = new CANSparkMax(Shooter.SHOOTER_MOTOR, MotorType.kBrushless);
   private final DoubleSolenoid shooterSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Shooter.SHOOTER_SOLENOID_FWD, Shooter.SHOOTER_SOLENOID_REV);
@@ -129,7 +132,7 @@ public class RobotContainer {
     driveSubsystem.setDefaultCommand(new RunCommand(
         () -> {
           if (robot.isTeleopEnabled()) {
-            driveSubsystem.joystickDrive(leftJoystick.getY() * xSpeedMultiplier, rightJoystick.getX() * xRotationMultiplier);
+            driveSubsystem.joystickDrive(leftJoystick.getY() * getSpeedMultiplier(), rightJoystick.getX() * getRotationMultiplier());
           } else {
             driveSubsystem.drive(0, 0);
           }
@@ -172,25 +175,37 @@ public class RobotContainer {
 
     // makes both rotation and speed slower
     btnSlowMode.whenPressed(new InstantCommand(() -> {
-      if (xSpeedMultiplier == xSpeedMultiplierNormal)
-      {
-        xSpeedMultiplier = xSpeedMultiplierSlow;
-        xRotationMultiplier = xRotationMultiplierSlow;
-      }
-      else
-      {
-        xSpeedMultiplier = xSpeedMultiplierNormal;
-        xRotationMultiplier = xRotationMultiplierNormal;
-      }
+      slowModeEnabled = !slowModeEnabled;
     })); 
 
     // just makes rotation slower
     btnSlowRotation.whenPressed(new InstantCommand(() -> {
-      if (xRotationMultiplier == xRotationMultiplierNormal)
-        xRotationMultiplier = xRotationMultiplierSlow;
-      else
-        xRotationMultiplier = xRotationMultiplierNormal;
+      slowRotationEnabled = !slowRotationEnabled;
     }));
+  }
+
+  private double getSpeedMultiplier()
+  {
+    if (slowModeEnabled)
+    {
+      xSpeedMultiplier = xSpeedMultiplierSlow;
+      xRotationMultiplier = xRotationMultiplierSlow;
+    }
+    else
+    {
+      xSpeedMultiplier = xSpeedMultiplierNormal;
+      xRotationMultiplier = xRotationMultiplierNormal;
+    }
+    return xSpeedMultiplier;
+  }
+
+  private double getRotationMultiplier()
+  {
+    if (slowRotationEnabled)
+      xRotationMultiplier = xRotationMultiplierSlow;
+    else
+      xRotationMultiplier = xRotationMultiplierNormal;
+    return xRotationMultiplier;
   }
 
   /**
