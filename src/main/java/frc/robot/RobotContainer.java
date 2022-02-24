@@ -25,8 +25,9 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ToggleIntakePistonsCommand;
+import frc.robot.commands.autonomous.AroundTarmacCommand;
 import frc.robot.commands.autonomous.ChargeCommand;
-import frc.robot.commands.autonomous.SlalomCommand;
+import frc.robot.commands.autonomous.CurveCommand;
 import frc.robot.common.Odometry;
 import frc.robot.common.TrajectoryLoader;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -186,7 +187,7 @@ public class RobotContainer {
       .whenInactive(new InstantCommand(() -> storageSubsystem.spinVolts(0), storageSubsystem), true);
 
     btnShooterSpin
-      .whileHeld(new InstantCommand(() -> shooterSubsystem.shootVoltage(5), shooterSubsystem))
+      .whileHeld(new InstantCommand(() -> shooterSubsystem.shootVelocity(2100), shooterSubsystem))
       .whenReleased(new InstantCommand(() -> shooterSubsystem.shootVoltage(0), shooterSubsystem), true);
 
     btnShooterSolenoid
@@ -227,7 +228,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     odometry.zeroHeading();
-    return new SlalomCommand(driveSubsystem, odometry, trajectories);
+    return new AroundTarmacCommand(driveSubsystem, odometry, trajectories);
   }
   
   public Timer getTimer() {

@@ -18,10 +18,10 @@ import frc.robot.commands.FollowTrajectoryCommand;
 import frc.robot.common.Odometry;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class SlalomCommand extends SequentialCommandGroup{
+public class CurveCommand extends SequentialCommandGroup{
     private String TRAJECTORY_NAME = "curve";
 
-    public SlalomCommand(DriveSubsystem driveSubsystem, Odometry odometry, HashMap<String, Trajectory> trajectories) {
+    public CurveCommand(DriveSubsystem driveSubsystem, Odometry odometry, HashMap<String, Trajectory> trajectories) {
        
     
         Trajectory slalom = trajectories.get(TRAJECTORY_NAME);

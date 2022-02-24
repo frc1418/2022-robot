@@ -60,7 +60,7 @@ public final class Constants {
 
         // DriveSubsystem constants
         private static final double METERS_PER_ROTATION = Math.PI * DRIVE_WHEEL_DIAMETER;  // Meters
-        public static final double TRACK_WIDTH = 3.6864;  // Meters (This value was given by SysID)
+        public static final double TRACK_WIDTH = 0.72248;  // Meters (This value was given by SysID)
         public static final double WHEEL_BASE = 0.4469;  // Meters
 
         public static final double KS = 0.18508;  // Volts
