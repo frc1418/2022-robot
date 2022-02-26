@@ -82,6 +82,7 @@ public class RobotContainer {
   private final NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
   private final NetworkTable table = ntInstance.getTable("/components/drivetrain");
   private final NetworkTableEntry slowModeEntry = table.getEntry("slow_mode");
+  private final NetworkTableEntry slowRotationEntry = table.getEntry("slow_rotation");
 
   private final RelativeEncoder leftEncoder = frontLeftMotor.getEncoder();
   private final RelativeEncoder rightEncoder = frontRightMotor.getEncoder();
@@ -225,6 +226,8 @@ public class RobotContainer {
     // just makes rotation slower
     btnSlowRotation.whenPressed(new InstantCommand(() -> {
       slowRotationEnabled = !slowRotationEnabled;
+
+      slowRotationEntry.setBoolean(slowRotationEnabled);
     }));
   }
 
