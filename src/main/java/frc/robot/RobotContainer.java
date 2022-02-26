@@ -10,6 +10,9 @@ import java.util.HashMap;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -75,6 +78,10 @@ public class RobotContainer {
 
   // ODOMETRY
   private final AHRS gyro = new AHRS(SPI.Port.kMXP);
+
+  private final NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
+  private final NetworkTable table = ntInstance.getTable("/components/drivetrain");
+  private final NetworkTableEntry slowModeEntry = table.getEntry("slow_mode");
 
   private final RelativeEncoder leftEncoder = frontLeftMotor.getEncoder();
   private final RelativeEncoder rightEncoder = frontRightMotor.getEncoder();
@@ -212,6 +219,7 @@ public class RobotContainer {
     btnSlowMode.whenPressed(new InstantCommand(() -> {
       slowSpeedEnabled = !slowSpeedEnabled;
       slowRotationEnabled = !slowRotationEnabled;
+      slowModeEntry.setBoolean(slowSpeedEnabled);
     })); 
 
     // just makes rotation slower
