@@ -6,17 +6,30 @@ package frc.robot;
 
 import static frc.robot.Constants.*;
 
+import java.util.HashMap;
+
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ToggleIntakePistonsCommand;
+import frc.robot.commands.autonomous.AroundTarmacCommand;
+import frc.robot.commands.autonomous.ChargeCommand;
+import frc.robot.commands.autonomous.CurveCommand;
+import frc.robot.common.Odometry;
+import frc.robot.common.TrajectoryLoader;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -29,7 +42,10 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 /**
@@ -46,24 +62,41 @@ public class RobotContainer {
 
   private final RobotBase robot;
 
+  // NETWORK TABLES
+  private final Field2d field = new Field2d();
+  private final Timer timer = new Timer();
+
   // DRIVE
   private final CANSparkMax frontLeftMotor = new CANSparkMax(DriveTrain.FRONT_LEFT_MOTOR, MotorType.kBrushless);
   private final CANSparkMax frontRightMotor = new CANSparkMax(DriveTrain.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
   private final CANSparkMax rearLeftMotor = new CANSparkMax(DriveTrain.REAR_LEFT_MOTOR, MotorType.kBrushless);
   private final CANSparkMax rearRightMotor = new CANSparkMax(DriveTrain.REAR_RIGHT_MOTOR, MotorType.kBrushless);
 
+
+  // ODOMETRY
+  private final AHRS gyro = new AHRS(SPI.Port.kMXP);
+
+  private final RelativeEncoder leftEncoder = frontLeftMotor.getEncoder();
+  private final RelativeEncoder rightEncoder = frontRightMotor.getEncoder();
+
+  private final DifferentialDriveOdometry driveOdometry = new DifferentialDriveOdometry(gyro.getRotation2d());
+  private final Odometry odometry = new Odometry(gyro, driveOdometry, leftEncoder, rightEncoder);
+
+  // NAVX
+  private final AHRS navx = new AHRS(SPI.Port.kMXP);
+
   // DRIVE SUBSYSTEM
   private final MotorControllerGroup leftMotors = new MotorControllerGroup(frontLeftMotor, rearLeftMotor);
   private final MotorControllerGroup rightMotors = new MotorControllerGroup(frontRightMotor, rearRightMotor);
 
   private final DifferentialDrive driveTrain = new DifferentialDrive(leftMotors, rightMotors);
-  private final DriveSubsystem driveSubsystem = new DriveSubsystem(driveTrain);
+  private final DriveSubsystem driveSubsystem = new DriveSubsystem(driveTrain, leftMotors, rightMotors, odometry, field, timer);
 
   private final double xSpeedMultiplier = 0.6;
   private final double xRotationMultiplier = 0.45;
 
   // SHOOTER SUBSYSTEM
-  private final CANSparkMax shooterMotor = new CANSparkMax(Shooter.SHOOTER_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax shooterMotor = new CANSparkMax(EXTRA_CAN_ID, MotorType.kBrushless);
   private final DoubleSolenoid shooterSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Shooter.SHOOTER_SOLENOID_FWD, Shooter.SHOOTER_SOLENOID_REV);
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem(shooterMotor, shooterSolenoid);
 
@@ -83,11 +116,16 @@ public class RobotContainer {
   private final DoubleSolenoid rightSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Intake.SOLENOID_RIGHT_FWD, Intake.SOLENOID_RIGHT_REV);
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem(intakeMotor, leftSolenoid, rightSolenoid);
  
+  // TRAJECTORIES
+  private final TrajectoryLoader trajectoryLoader = new TrajectoryLoader();
+  private final HashMap<String, Trajectory> trajectories = trajectoryLoader.loadTrajectories();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(RobotBase robot) {
     this.robot = robot;
     // Configure the button bindings
     configureButtonBindings();
+    configureObjects();
   }
 
   /**
@@ -97,9 +135,6 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    frontRightMotor.setInverted(true);
-    storageMotorRight.setInverted(true);
-
     Joystick leftJoystick = new Joystick(0);
     Joystick rightJoystick = new Joystick(1);
     Joystick altJoystick = new Joystick(2);
@@ -138,7 +173,10 @@ public class RobotContainer {
       .whileHeld(new InstantCommand(() -> intakeSubsystem.spin(5), intakeSubsystem))
       .whenInactive(new InstantCommand(() -> intakeSubsystem.spin(0), intakeSubsystem), true);
 
-    btnIntakeSolenoid.toggleWhenPressed(new ToggleIntakePistonsCommand(intakeSubsystem));
+    btnIntakeSolenoid.whenPressed(new InstantCommand(() -> {
+      leftSolenoid.toggle();
+      rightSolenoid.toggle();
+    }));
       
     btnStorageIn
       .whileHeld(new InstantCommand(() -> storageSubsystem.spinVolts(2.5), storageSubsystem))
@@ -149,7 +187,7 @@ public class RobotContainer {
       .whenInactive(new InstantCommand(() -> storageSubsystem.spinVolts(0), storageSubsystem), true);
 
     btnShooterSpin
-      .whenHeld(new InstantCommand(() -> shooterSubsystem.shootVelocity(Shooter.TARMAC_LINE_VEL), shooterSubsystem))
+      .whileHeld(new InstantCommand(() -> shooterSubsystem.shootVelocity(2100), shooterSubsystem))
       .whenReleased(new InstantCommand(() -> shooterSubsystem.shootVoltage(0), shooterSubsystem), true);
 
     btnShooterSolenoid
@@ -164,6 +202,23 @@ public class RobotContainer {
       .whenHeld(new InstantCommand(() -> climbSubsystem.setWinchMotor(0), climbSubsystem))
       .whenReleased(new InstantCommand(() -> climbSubsystem.setWinchMotor(0), climbSubsystem), true);
   }
+  
+  public void configureObjects() {
+    frontRightMotor.setIdleMode(IdleMode.kBrake);
+    frontLeftMotor.setIdleMode(IdleMode.kBrake);
+    rearRightMotor.setIdleMode(IdleMode.kBrake);
+    rearLeftMotor.setIdleMode(IdleMode.kBrake);
+
+    frontRightMotor.setInverted(true);
+    frontLeftMotor.setInverted(false);
+    rearRightMotor.setInverted(true);
+    rearLeftMotor.setInverted(false);
+    
+    storageMotorLeft.setInverted(true);
+    storageMotorRight.setInverted(false);
+    
+    odometry.zeroHeading();
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -172,6 +227,15 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    odometry.zeroHeading();
+    return new AroundTarmacCommand(driveSubsystem, odometry, trajectories);
+  }
+  
+  public Timer getTimer() {
+    return timer;
+  }
+
+  public Odometry getOdometry() {
+    return odometry;
   }
 }

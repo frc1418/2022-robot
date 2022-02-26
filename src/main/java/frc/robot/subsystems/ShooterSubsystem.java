@@ -40,6 +40,7 @@ public class ShooterSubsystem  extends SubsystemBase {
     public void shootVelocity(double shooterSpeed) {
         shooterController.setReference(shooterSpeed, ControlType.kVelocity);
         targetRPM = shooterSpeed;
+        System.out.println("SPINNING UP VEL");
     }
 
     public void shootVoltage(double voltage) {
