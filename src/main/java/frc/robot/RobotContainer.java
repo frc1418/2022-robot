@@ -92,8 +92,14 @@ public class RobotContainer {
   private final DifferentialDrive driveTrain = new DifferentialDrive(leftMotors, rightMotors);
   private final DriveSubsystem driveSubsystem = new DriveSubsystem(driveTrain, leftMotors, rightMotors, odometry, field, timer);
 
-  private final double xSpeedMultiplier = 0.6;
-  private final double xRotationMultiplier = 0.45;
+  private final double xSpeedMultiplierNormal = 0.6;
+  private final double xRotationMultiplierNormal = 0.45;
+
+  private final double xSpeedMultiplierSlow = xSpeedMultiplierNormal * 0.2;
+  private final double xRotationMultiplierSlow = xRotationMultiplierNormal * 0.2;
+
+  private boolean slowSpeedEnabled = false;
+  private boolean slowRotationEnabled = false;
 
   // SHOOTER SUBSYSTEM
   private final CANSparkMax shooterMotor = new CANSparkMax(EXTRA_CAN_ID, MotorType.kBrushless);
@@ -158,7 +164,7 @@ public class RobotContainer {
     driveSubsystem.setDefaultCommand(new RunCommand(
         () -> {
           if (robot.isTeleopEnabled()) {
-            driveSubsystem.joystickDrive(leftJoystick.getY() * xSpeedMultiplier, rightJoystick.getX() * xRotationMultiplier);
+            driveSubsystem.joystickDrive(leftJoystick.getY() * getSpeedMultiplier(), rightJoystick.getX() * getRotationMultiplier());
           } else {
             driveSubsystem.drive(0, 0);
           }
@@ -201,6 +207,33 @@ public class RobotContainer {
     btnClimberDown
       .whenHeld(new InstantCommand(() -> climbSubsystem.setWinchMotor(0), climbSubsystem))
       .whenReleased(new InstantCommand(() -> climbSubsystem.setWinchMotor(0), climbSubsystem), true);
+
+    // makes both rotation and speed slower
+    btnSlowMode.whenPressed(new InstantCommand(() -> {
+      slowSpeedEnabled = !slowSpeedEnabled;
+      slowRotationEnabled = !slowRotationEnabled;
+    })); 
+
+    // just makes rotation slower
+    btnSlowRotation.whenPressed(new InstantCommand(() -> {
+      slowRotationEnabled = !slowRotationEnabled;
+    }));
+  }
+
+  private double getSpeedMultiplier()
+  {
+    if (slowSpeedEnabled)
+      return xSpeedMultiplierSlow;
+    else
+      return xSpeedMultiplierNormal;
+  }
+
+  private double getRotationMultiplier()
+  {
+    if (slowRotationEnabled)
+      return xRotationMultiplierSlow;
+    else
+      return xRotationMultiplierNormal;
   }
   
   public void configureObjects() {
