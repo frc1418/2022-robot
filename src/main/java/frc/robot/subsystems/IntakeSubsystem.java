@@ -16,9 +16,8 @@ public class IntakeSubsystem extends SubsystemBase {
     private final DoubleSolenoid rightSolenoid;
 
     private final NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
-
-    private final NetworkTable table = ntInstance.getTable("/common/Intake");
-    private final NetworkTableEntry pistons = table.getEntry("pistonsExtended");
+    private final NetworkTable table = ntInstance.getTable("/components/intake");
+    private final NetworkTableEntry piston_ext = table.getEntry("piston_extended");
 
     public IntakeSubsystem(
             CANSparkMax intakeMotor,
@@ -30,23 +29,27 @@ public class IntakeSubsystem extends SubsystemBase {
         this.rightSolenoid = rightSolenoid;
 
         intakeMotor.setIdleMode(IdleMode.kCoast);
-        this.retract();
-    }
-
-    public void extend() {
-        leftSolenoid.set(DoubleSolenoid.Value.kReverse);
-        rightSolenoid.set(DoubleSolenoid.Value.kReverse);
-        pistons.setBoolean(true);
+        extend();
     }
 
     public void retract() {
+        piston_ext.setBoolean(true);
         leftSolenoid.set(DoubleSolenoid.Value.kForward);
+        rightSolenoid.set(DoubleSolenoid.Value.kReverse);
+    }
+
+    public void extend() {
+        piston_ext.setBoolean(false);
+        leftSolenoid.set(DoubleSolenoid.Value.kReverse);
         rightSolenoid.set(DoubleSolenoid.Value.kForward);
-        pistons.setBoolean(false);
     }
 
     public void spin(double intakeVolts) {
         intakeMotor.setVoltage(intakeVolts);
+    }
+
+    public boolean isExtended(){
+        return piston_ext.getBoolean(true);
     }
 
     @Override
