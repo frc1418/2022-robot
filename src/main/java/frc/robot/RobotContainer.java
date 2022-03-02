@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import frc.robot.commands.AlignWithLimelightCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ToggleIntakePistonsCommand;
 import frc.robot.commands.autonomous.AroundTarmacCommand;
@@ -37,6 +38,7 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.StorageSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -129,6 +131,9 @@ public class RobotContainer {
   private final DoubleSolenoid leftSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Intake.SOLENOID_LEFT_FWD, Intake.SOLENOID_LEFT_REV);
   private final DoubleSolenoid rightSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Intake.SOLENOID_RIGHT_FWD, Intake.SOLENOID_RIGHT_REV);
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem(intakeMotor, leftSolenoid, rightSolenoid);
+
+  // LIMELIGHT
+  private final LimelightSubsystem limelightSubsystem = new LimelightSubsystem();
  
   // TRAJECTORIES
   private final TrajectoryLoader trajectoryLoader = new TrajectoryLoader();
@@ -168,6 +173,8 @@ public class RobotContainer {
     
     JoystickButton btnSlowMode = new JoystickButton(leftJoystick, 1);
     JoystickButton btnSlowRotation = new JoystickButton(rightJoystick, 1);
+
+    JoystickButton btnAlign = new JoystickButton(leftJoystick, 1);
 
     driveSubsystem.setDefaultCommand(new RunCommand(
         () -> {
@@ -229,6 +236,9 @@ public class RobotContainer {
 
       slowRotationEntry.setBoolean(slowRotationEnabled);
     }));
+
+    btnAlign
+        .whenHeld(new AlignWithLimelightCommand(limelightSubsystem, driveSubsystem));
   }
 
   private double getSpeedMultiplier()
