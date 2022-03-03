@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -26,6 +27,10 @@ public class ShooterSubsystem  extends SubsystemBase {
     private final NetworkTableEntry ntTargetRPM = table.getEntry("target_rpm");
     private final NetworkTableEntry output = table.getEntry("output");
     private final NetworkTableEntry current = table.getEntry("current");
+    private final NetworkTableEntry kP = table.getEntry("p");
+    private final NetworkTableEntry kI = table.getEntry("i");
+    private final NetworkTableEntry kD = table.getEntry("d");
+    private final NetworkTableEntry kF = table.getEntry("f");
 
     private double targetRPM = 0;
 
@@ -35,12 +40,21 @@ public class ShooterSubsystem  extends SubsystemBase {
         this.shooterController = shooterMotor.getPIDController();
         this.shooterEncoder = shooterMotor.getEncoder();
         this.shooterSolenoid = shooterSolenoid;
+
+        shooterController.setP(0);
+        shooterController.setI(0);
+        shooterController.setD(0);
+        shooterController.setFF(0);
+
+        kP.setDouble(0.000021);
+        kI.setDouble(0.0000000000025);
+        kD.setDouble(0.000000011);
+        kF.setDouble(0.0002025);
     }
 
     public void shootVelocity(double shooterSpeed) {
         shooterController.setReference(shooterSpeed, ControlType.kVelocity);
         targetRPM = shooterSpeed;
-        System.out.println("SPINNING UP VEL");
     }
 
     public void shootVoltage(double voltage) {
@@ -49,11 +63,23 @@ public class ShooterSubsystem  extends SubsystemBase {
 
     @Override
     public void periodic() {
+
         // sets networkTable values
         rpm.setDouble(this.shooterEncoder.getVelocity());
         ntTargetRPM.setDouble(targetRPM);
         output.setDouble(this.shooterMotor.getAppliedOutput());
         current.setDouble(this.shooterMotor.getOutputCurrent());
+
+        shooterController.setP(kP.getDouble(0));
+        shooterController.setI(kI.getDouble(0));
+        shooterController.setD(kD.getDouble(0));
+        shooterController.setFF(kF.getDouble(0));
+
+        // if(shooterEncoder.getVelocity() < targetRPM * 0.6){
+        //     shooterMotor.setIdleMode(IdleMode.kBrake);
+        // } else {
+        //     shooterMotor.setIdleMode(IdleMode.kCoast);
+        // }
     }
 
     public void setPiston(DoubleSolenoid.Value value) {

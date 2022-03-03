@@ -16,6 +16,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.SPI;
@@ -24,6 +25,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PS4Controller.Axis;
+import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.robot.commands.AlignWithLimelightCommand;
@@ -102,8 +105,8 @@ public class RobotContainer {
   private final DifferentialDrive driveTrain = new DifferentialDrive(leftMotors, rightMotors);
   private final DriveSubsystem driveSubsystem = new DriveSubsystem(driveTrain, leftMotors, rightMotors, odometry, field, timer);
 
-  private final double xSpeedMultiplierNormal = 0.6;
-  private final double xRotationMultiplierNormal = 0.45;
+  private final double xSpeedMultiplierNormal = 0.7;
+  private final double xRotationMultiplierNormal = 0.4;
 
   private final double xSpeedMultiplierSlow = xSpeedMultiplierNormal * 0.2;
   private final double xRotationMultiplierSlow = xRotationMultiplierNormal * 0.2;
@@ -112,7 +115,7 @@ public class RobotContainer {
   private boolean slowRotationEnabled = false;
 
   // SHOOTER SUBSYSTEM
-  private final CANSparkMax shooterMotor = new CANSparkMax(EXTRA_CAN_ID, MotorType.kBrushless);
+  private final CANSparkMax shooterMotor = new CANSparkMax(Shooter.SHOOTER_MOTOR, MotorType.kBrushless);
   private final DoubleSolenoid shooterSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Shooter.SHOOTER_SOLENOID_FWD, Shooter.SHOOTER_SOLENOID_REV);
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem(shooterMotor, shooterSolenoid);
 
@@ -143,8 +146,8 @@ public class RobotContainer {
   public RobotContainer(RobotBase robot) {
     this.robot = robot;
     // Configure the button bindings
-    configureButtonBindings();
     configureObjects();
+    configureButtonBindings();
   }
 
   /**
@@ -156,16 +159,15 @@ public class RobotContainer {
   private void configureButtonBindings() {
     Joystick leftJoystick = new Joystick(0);
     Joystick rightJoystick = new Joystick(1);
-    Joystick altJoystick = new Joystick(2);
+    PS4Controller altJoystick = new PS4Controller(2);
 
-    JoystickButton btnIntakeIn = new JoystickButton(altJoystick, 4);
-    JoystickButton btnIntakeOut = new JoystickButton(altJoystick, 6);
-    JoystickButton btnIntakeSolenoid = new JoystickButton(altJoystick, 2);
+    JoystickButton btnIntakeOut = new JoystickButton(altJoystick, 3);
+    JoystickButton btnIntakeSolenoid = new JoystickButton(altJoystick, 4);
     
-    JoystickButton btnStorageIn = new JoystickButton(altJoystick, 3);
-    JoystickButton btnStorageOut = new JoystickButton(altJoystick, 5);
+    JoystickButton btnStorageIn = new JoystickButton(altJoystick, 5);
+    JoystickButton btnStorageOut = new JoystickButton(altJoystick, 1);
     
-    JoystickButton btnShooterSpin = new JoystickButton(altJoystick, 9);
+    JoystickButton btnShooterSpinLow = new JoystickButton(altJoystick, 6);
     JoystickButton btnShooterSolenoid = new JoystickButton(altJoystick, 1);
 
     JoystickButton btnClimberUp = new JoystickButton(leftJoystick, 2);
@@ -185,30 +187,33 @@ public class RobotContainer {
           }
         },
         driveSubsystem));
+
+      intakeSubsystem.setDefaultCommand(new RunCommand(
+        () -> intakeSubsystem.spin(-6 * altJoystick.getRawAxis(2)), intakeSubsystem));
+
+      shooterSubsystem.setDefaultCommand(new RunCommand(
+        () -> shooterSubsystem.shootVelocity(-2200 * altJoystick.getRawAxis(3)), shooterSubsystem));
     
-    btnIntakeIn
-      .whileHeld(new InstantCommand(() -> intakeSubsystem.spin(-7), intakeSubsystem))
-      .whenInactive(new InstantCommand(() -> intakeSubsystem.spin(0), intakeSubsystem), true);
-
     btnIntakeOut
-      .whileHeld(new InstantCommand(() -> intakeSubsystem.spin(5), intakeSubsystem))
+      .whileHeld(new InstantCommand(() -> intakeSubsystem.spin(6), intakeSubsystem))
       .whenInactive(new InstantCommand(() -> intakeSubsystem.spin(0), intakeSubsystem), true);
 
-    btnIntakeSolenoid.whenPressed(new InstantCommand(() -> {
-      leftSolenoid.toggle();
-      rightSolenoid.toggle();
-    }));
+    btnIntakeSolenoid.toggleWhenPressed(new ToggleIntakePistonsCommand(intakeSubsystem));
+
+    btnIntakeSolenoid
+      .whileHeld(new InstantCommand(() -> intakeSubsystem.spin(-6), intakeSubsystem))
+      .whenInactive(new InstantCommand(() -> intakeSubsystem.spin(0), intakeSubsystem), true);
       
     btnStorageIn
       .whileHeld(new InstantCommand(() -> storageSubsystem.spinVolts(2.5), storageSubsystem))
       .whenInactive(new InstantCommand(() -> storageSubsystem.spinVolts(0), storageSubsystem), true);
     
     btnStorageOut
-      .whileHeld(new InstantCommand(() -> storageSubsystem.spinVolts(-1.5), storageSubsystem))
+      .whileHeld(new InstantCommand(() -> storageSubsystem.spinVolts(-2.5), storageSubsystem))
       .whenInactive(new InstantCommand(() -> storageSubsystem.spinVolts(0), storageSubsystem), true);
 
-    btnShooterSpin
-      .whileHeld(new InstantCommand(() -> shooterSubsystem.shootVelocity(2100), shooterSubsystem))
+    btnShooterSpinLow
+      .whileHeld(new InstantCommand(() -> shooterSubsystem.shootVelocity(-1700), shooterSubsystem))
       .whenReleased(new InstantCommand(() -> shooterSubsystem.shootVoltage(0), shooterSubsystem), true);
 
     btnShooterSolenoid
