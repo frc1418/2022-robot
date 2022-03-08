@@ -106,7 +106,11 @@ public class RobotContainer {
   private final DriveSubsystem driveSubsystem = new DriveSubsystem(driveTrain, leftMotors, rightMotors, odometry, field, timer);
 
   private final double xSpeedMultiplierNormal = 0.7;
+<<<<<<< Updated upstream
   private final double xRotationMultiplierNormal = 0.63;
+=======
+  private final double xRotationMultiplierNormal = 0.6;
+>>>>>>> Stashed changes
 
   private final double xSpeedMultiplierSlow = xSpeedMultiplierNormal * 0.7;
   private final double xRotationMultiplierSlow = xRotationMultiplierNormal * 0.7;
@@ -192,9 +196,18 @@ public class RobotContainer {
         },
         driveSubsystem));
 
+<<<<<<< Updated upstream
     shooterSubsystem.setDefaultCommand(new RunCommand(
         () -> shooterSubsystem.shootVelocity(-2000 * altJoystick.getRawAxis(3)), shooterSubsystem));
       
+=======
+      intakeSubsystem.setDefaultCommand(new RunCommand(
+        () -> intakeSubsystem.spin(-6 * altJoystick.getRawAxis(2)), intakeSubsystem));
+
+      shooterSubsystem.setDefaultCommand(new RunCommand(
+        () -> shooterSubsystem.shootVelocity(-1850 * altJoystick.getRawAxis(3)), shooterSubsystem));
+    
+>>>>>>> Stashed changes
     btnIntakeOut
       .whileHeld(new InstantCommand(() -> intakeSubsystem.spin(7), intakeSubsystem))
       .whenInactive(new InstantCommand(() -> intakeSubsystem.spin(0), intakeSubsystem), true);
@@ -215,12 +228,20 @@ public class RobotContainer {
     btnStorageOut
       .whileHeld(new InstantCommand(() -> {
         storageSubsystem.spinVolts(-2.5);
+<<<<<<< Updated upstream
         shooterSubsystem.shootVoltage(1);
+=======
+        shooterSubsystem.shootVoltage(-1);
+>>>>>>> Stashed changes
       }, storageSubsystem))
       .whenInactive(new InstantCommand(() -> storageSubsystem.spinVolts(0), storageSubsystem), true);
 
     btnShooterSpinLow
+<<<<<<< Updated upstream
       .whileHeld(new InstantCommand(() -> shooterSubsystem.shootVelocity(-1400), shooterSubsystem))
+=======
+      .whileHeld(new InstantCommand(() -> shooterSubsystem.shootVelocity(-1200), shooterSubsystem))
+>>>>>>> Stashed changes
       .whenReleased(new InstantCommand(() -> shooterSubsystem.shootVoltage(0), shooterSubsystem), true);
 
     btnClimberMiddle
