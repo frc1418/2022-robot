@@ -180,8 +180,8 @@ public class RobotContainer {
 
     JoystickButton btnAlign = new JoystickButton(leftJoystick, 1);
 
-    JoystickButton btnShooterBack = new JoystickButton(altJoystick, 2);
 
+    // DRIVETRAIN
     driveSubsystem.setDefaultCommand(new RunCommand(
         () -> {
           if (robot.isTeleopEnabled()) {
@@ -192,72 +192,80 @@ public class RobotContainer {
         },
         driveSubsystem));
 
-      intakeSubsystem.setDefaultCommand(new RunCommand(
-        () -> intakeSubsystem.spin(-6 * altJoystick.getRawAxis(2)), intakeSubsystem));
+    btnSlowMode.whenPressed(new InstantCommand(() -> {
+      // makes both rotation and speed slower
+      slowSpeedEnabled = !slowSpeedEnabled;
+      slowRotationEnabled = !slowRotationEnabled;
+      slowModeEntry.setBoolean(slowSpeedEnabled);
+    })); 
 
-      shooterSubsystem.setDefaultCommand(new RunCommand(
-        () -> shooterSubsystem.shootVelocity(-1850 * altJoystick.getRawAxis(3)), shooterSubsystem));
-    
+    btnSlowRotation.whenPressed(new InstantCommand(() -> {
+      // just makes rotation slower
+      slowRotationEnabled = !slowRotationEnabled;
+      slowRotationEntry.setBoolean(slowRotationEnabled);
+    }));
+
+    btnAlign
+        .whenHeld(new AlignWithLimelightCommand(limelightSubsystem, driveSubsystem));
+
+
+    // INTAKE
+    intakeSubsystem.setDefaultCommand(new RunCommand(
+        () -> intakeSubsystem.spin(DriverValues.intakeInVoltage * altJoystick.getRawAxis(2)), intakeSubsystem));
+
     btnIntakeOut
-      .whileHeld(new InstantCommand(() -> intakeSubsystem.spin(7), intakeSubsystem))
+      .whileHeld(new InstantCommand(() -> intakeSubsystem.spin(DriverValues.intakeOutVoltage), intakeSubsystem))
       .whenInactive(new InstantCommand(() -> intakeSubsystem.spin(0), intakeSubsystem), true);
 
     btnIntakeSolenoid.toggleWhenPressed(new ToggleIntakePistonsCommand(intakeSubsystem));
-
+    
     btnIntakeSolenoid
-      .whileHeld(new InstantCommand(() -> intakeSubsystem.spin(-6.5), intakeSubsystem))
+      .whileHeld(new InstantCommand(() -> intakeSubsystem.spin(DriverValues.intakeInVoltage), intakeSubsystem))
       .whenInactive(new InstantCommand(() -> intakeSubsystem.spin(0), intakeSubsystem), true);
-      
+
+    
+    // SHOOTER
+    shooterSubsystem.setDefaultCommand(new RunCommand(
+        () -> shooterSubsystem.shootVelocity(DriverValues.shooterHighVelocity * altJoystick.getRawAxis(3)), shooterSubsystem));
+    
+    btnShooterSpinLow
+      .whileHeld(new InstantCommand(() -> shooterSubsystem.shootVelocity(DriverValues.shooterLowVelocity), shooterSubsystem))
+      .whenReleased(new InstantCommand(() -> shooterSubsystem.shootVoltage(0), shooterSubsystem), true);
+
+    
+    // STORAGE
     btnStorageIn
-      .whileHeld(new InstantCommand(() -> storageSubsystem.spinVolts(2.5), storageSubsystem))
+      .whileHeld(new InstantCommand(() -> storageSubsystem.spinVolts(DriverValues.storageInVoltage), storageSubsystem))
       .whenInactive(new InstantCommand(() -> storageSubsystem.spinVolts(0), storageSubsystem), true);
     
     btnStorageOut
       .whileHeld(new InstantCommand(() -> {
-        storageSubsystem.spinVolts(-2.5);
+        storageSubsystem.spinVolts(DriverValues.storageOutVoltage);
         shooterSubsystem.shootVoltage(1);
       }, storageSubsystem))
       .whenInactive(new InstantCommand(() -> storageSubsystem.spinVolts(0), storageSubsystem), true);
 
-    btnShooterSpinLow
-      .whileHeld(new InstantCommand(() -> shooterSubsystem.shootVelocity(-1200), shooterSubsystem))
-      .whenReleased(new InstantCommand(() -> shooterSubsystem.shootVoltage(0), shooterSubsystem), true);
-
+    
+    // CLIMBER
     btnClimberMiddle
       .whileHeld(new InstantCommand(() -> climbSubsystem.setWinchPos(Climber.MEDIUM_RUNG_POS), climbSubsystem))
       .whenReleased(new InstantCommand(() -> climbSubsystem.setWinchMotor(0), climbSubsystem), true);
 
     btnClimberManualDown
-      .whileHeld(new InstantCommand(() -> climbSubsystem.setWinchMotor(-0.3), climbSubsystem))
+      .whileHeld(new InstantCommand(() -> climbSubsystem.setWinchMotor(DriverValues.climberDownVoltage), climbSubsystem))
       .whenReleased(new InstantCommand(() -> climbSubsystem.setWinchMotor(0), climbSubsystem), true);
 
     btnClimberManualUp
-      .whileHeld(new InstantCommand(() -> climbSubsystem.setWinchMotor(0.3), climbSubsystem))
+      .whileHeld(new InstantCommand(() -> climbSubsystem.setWinchMotor(DriverValues.climberUpVoltage), climbSubsystem))
       .whenReleased(new InstantCommand(() -> climbSubsystem.setWinchMotor(0), climbSubsystem), true);
 
     btnClimberZero
       .whenHeld(new InstantCommand(() -> climbSubsystem.resetClimberPosition()));
 
     btnClimberDown
-      .whileHeld(new InstantCommand(() -> climbSubsystem.setWinchPos(5), climbSubsystem))
+      .whileHeld(new InstantCommand(() -> climbSubsystem.setWinchPos(Climber.CLIMBER_DOWN_POS), climbSubsystem))
       .whenReleased(new InstantCommand(() -> climbSubsystem.setWinchMotor(0), climbSubsystem), true);
 
-    // makes both rotation and speed slower
-    btnSlowMode.whenPressed(new InstantCommand(() -> {
-      slowSpeedEnabled = !slowSpeedEnabled;
-      slowRotationEnabled = !slowRotationEnabled;
-      slowModeEntry.setBoolean(slowSpeedEnabled);
-    })); 
-
-    // just makes rotation slower
-    btnSlowRotation.whenPressed(new InstantCommand(() -> {
-      slowRotationEnabled = !slowRotationEnabled;
-
-      slowRotationEntry.setBoolean(slowRotationEnabled);
-    }));
-
-    btnAlign
-        .whenHeld(new AlignWithLimelightCommand(limelightSubsystem, driveSubsystem));
   }
 
   private double getSpeedMultiplier()

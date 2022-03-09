@@ -96,6 +96,7 @@ public final class Constants {
     public static final class Climber {
         public static final int CLIMBER_MOTOR = 9;
         public static final int MEDIUM_RUNG_POS = 100;
+        public static final int CLIMBER_DOWN_POS = 5;
 
         public static final int CLICKS_PER_ROTAITON = 2048;
     }
@@ -126,6 +127,21 @@ public final class Constants {
     
         public static final double integratorMin = -4.0;
         public static final double integratorMax = 4.0;
+    }
+
+    public static final class DriverValues {
+        public static final int intakeInVoltage = -6;
+        public static final int intakeOutVoltage = 7;
+
+        public static final int shooterHighVelocity = -1850;
+        public static final int shooterLowVelocity = -1200;
+        public static final int shooterBackVoltage = 1;
+
+        public static final double storageInVoltage = 2.5;
+        public static final double storageOutVoltage = -2.5;
+
+        public static final double climberUpVoltage = 0.3;
+        public static final double climberDownVoltage = -0.3;
     }
   
     public static final int EXTRA_CAN_ID = 25;
