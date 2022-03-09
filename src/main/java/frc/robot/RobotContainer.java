@@ -319,8 +319,4 @@ public class RobotContainer {
   public Odometry getOdometry() {
     return odometry;
   }
-
-  public ClimbSubsystem getClimbSubsystem(){
-    return climbSubsystem;
-  }
 }

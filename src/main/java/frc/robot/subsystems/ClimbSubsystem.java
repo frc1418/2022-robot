@@ -43,18 +43,8 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
     public void setWinchPos(double pos){
-        // // pos *= Climber.CLICKS_PER_ROTAITON;
-        // System.out.println(pos - climberMotor.getSensorCollection().getIntegratedSensorPosition());
-
-        // // moves motor is correct direction when position is off by more than half a rotation
-        // while (Math.abs(pos - getCurrentPos() / Climber.CLICKS_PER_ROTAITON) > 2){
-        //     System.out.println(Math.abs(pos - getCurrentPos()));
-        //     setWinchMotor((pos - getCurrentPos()) / Math.abs(pos - getCurrentPos()) * speed);
-        // }
-        // setWinchMotor(0);
         targetPos.setDouble(pos);
 
-        System.out.println(pos);
         climberMotor.set(TalonFXControlMode.Position, Climber.CLICKS_PER_ROTAITON * pos);
     }
 
