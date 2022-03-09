@@ -77,7 +77,6 @@ public final class Constants {
         public static final int SHOOTER_MOTOR = 5;
         public static final int SHOOTER_SOLENOID_FWD = 6;
         public static final int SHOOTER_SOLENOID_REV = 7;
-        public static final int TARMAC_LINE_VEL = 2100;
     }
 
     public static final class Intake {
@@ -133,9 +132,9 @@ public final class Constants {
         public static final int intakeInVoltage = -6;
         public static final int intakeOutVoltage = 7;
 
-        public static final int shooterHighVelocity = -1850;
+        public static final int shooterHighVelocity = -2100;
         public static final int shooterLowVelocity = -1200;
-        public static final int shooterBackVoltage = 1;
+        public static final int shooterBackVoltage = 3;
 
         public static final double storageInVoltage = 2.5;
         public static final double storageOutVoltage = -2.5;

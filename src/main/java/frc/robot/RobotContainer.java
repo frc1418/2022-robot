@@ -241,7 +241,7 @@ public class RobotContainer {
     btnStorageOut
       .whileHeld(new InstantCommand(() -> {
         storageSubsystem.spinVolts(DriverValues.storageOutVoltage);
-        shooterSubsystem.shootVoltage(1);
+        shooterSubsystem.shootVoltage(DriverValues.shooterBackVoltage);
       }, storageSubsystem))
       .whenInactive(new InstantCommand(() -> storageSubsystem.spinVolts(0), storageSubsystem), true);
 
