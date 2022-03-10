@@ -8,7 +8,7 @@ We use two joysticks and 1 ps3 controller to control the robot:
 * 1 x **ZD-V+ Gaming Controller** (`altJoystick`)
 <!-- * 1 x **Logitech Extreme 3D Pro** (`joystick_alt`) -->
 
-<img src="res/ATK3.png" height="600"/>
+<img src="res/driver_controls.png" height="400"/>
 <img src="res/robotics_shooter_controls.png" height="400"/>
 
 ["PS4 Buttons"](https://arks.itch.io/ps4-buttons) by [Arks💢](https://itch.io/profile/arks) is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
