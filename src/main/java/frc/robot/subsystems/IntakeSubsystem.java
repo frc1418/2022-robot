@@ -29,7 +29,7 @@ public class IntakeSubsystem extends SubsystemBase {
         this.rightSolenoid = rightSolenoid;
 
         intakeMotor.setIdleMode(IdleMode.kCoast);
-        extend();
+        retract();
     }
 
     public void retract() {
