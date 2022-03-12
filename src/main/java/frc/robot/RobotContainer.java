@@ -31,10 +31,14 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.robot.commands.AlignWithLimelightCommand;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.ShootyCommand;
 import frc.robot.commands.ToggleIntakePistonsCommand;
 import frc.robot.commands.autonomous.AroundTarmacCommand;
 import frc.robot.commands.autonomous.ChargeCommand;
 import frc.robot.commands.autonomous.CurveCommand;
+import frc.robot.commands.autonomous.ShootBackLeftCommand;
+import frc.robot.commands.autonomous.ShootBackRightCommand;
+import frc.robot.commands.autonomous.ShootStraightBackCommand;
 import frc.robot.common.Odometry;
 import frc.robot.common.TrajectoryLoader;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -75,10 +79,10 @@ public class RobotContainer {
   private final Timer timer = new Timer();
 
   // DRIVE
-  private final CANSparkMax frontLeftMotor = new CANSparkMax(EXTRA_CAN_ID, MotorType.kBrushless);
-  private final CANSparkMax frontRightMotor = new CANSparkMax(DriveTrain.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
-  private final CANSparkMax rearLeftMotor = new CANSparkMax(DriveTrain.REAR_LEFT_MOTOR, MotorType.kBrushless);
-  private final CANSparkMax rearRightMotor = new CANSparkMax(DriveTrain.REAR_RIGHT_MOTOR, MotorType.kBrushless);
+  public final CANSparkMax frontLeftMotor = new CANSparkMax(EXTRA_CAN_ID, MotorType.kBrushless);
+  public final CANSparkMax frontRightMotor = new CANSparkMax(DriveTrain.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
+  public final CANSparkMax rearLeftMotor = new CANSparkMax(DriveTrain.REAR_LEFT_MOTOR, MotorType.kBrushless);
+  public final CANSparkMax rearRightMotor = new CANSparkMax(DriveTrain.REAR_RIGHT_MOTOR, MotorType.kBrushless);
 
 
   // ODOMETRY
@@ -106,7 +110,7 @@ public class RobotContainer {
   private final DriveSubsystem driveSubsystem = new DriveSubsystem(driveTrain, leftMotors, rightMotors, odometry, field, timer);
 
   private final double xSpeedMultiplierNormal = 0.7;
-  private final double xRotationMultiplierNormal = 0.63;
+  private final double xRotationMultiplierNormal = 0.6;
 
   private final double xSpeedMultiplierSlow = xSpeedMultiplierNormal * 0.7;
   private final double xRotationMultiplierSlow = xRotationMultiplierNormal * 0.7;
@@ -309,7 +313,10 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     odometry.zeroHeading();
-    return new AroundTarmacCommand(driveSubsystem, odometry, trajectories);
+    // return new ShootStraightBackCommand(driveSubsystem, odometry, storageSubsystem, shooterSubsystem, trajectories);
+    // return new ShootBackRightCommand(driveSubsystem, odometry, storageSubsystem, shooterSubsystem, trajectories);
+    return new ShootBackLeftCommand(driveSubsystem, odometry, storageSubsystem, shooterSubsystem, trajectories);
+    // return new ShootyCommand(-2100, 2.5, 3, 8, shooterSubsystem, storageSubsystem);
   }
   
   public Timer getTimer() {
