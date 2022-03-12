@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -36,7 +38,8 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer(this);
     timer = m_robotContainer.getTimer();
-    CameraServer.startAutomaticCapture();
+    CameraServer.startAutomaticCapture(0);
+    CameraServer.startAutomaticCapture(1);
   }
 
   /**
@@ -57,7 +60,12 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    m_robotContainer.frontRightMotor.setIdleMode(IdleMode.kCoast);
+    m_robotContainer.frontLeftMotor.setIdleMode(IdleMode.kCoast);
+    m_robotContainer.rearRightMotor.setIdleMode(IdleMode.kCoast);
+    m_robotContainer.rearLeftMotor.setIdleMode(IdleMode.kCoast);
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -90,7 +98,7 @@ public class Robot extends TimedRobot {
     }
     m_robotContainer.getOdometry().zeroHeading();
     m_robotContainer.getOdometry().reset(new Pose2d(0, 0, new Rotation2d(0)));
-
+    m_robotContainer.configureObjects();
   }
 
   /** This function is called periodically during operator control. */

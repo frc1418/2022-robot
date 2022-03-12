@@ -61,6 +61,11 @@ public final class Constants {
         public static final double DRIVE_WHEEL_DIAMETER = Units.inchesToMeters(6);  // Meters
         public static final double DRIVE_ENCODER_CONSTANT = (1 / DRIVE_GEARING) * DRIVE_WHEEL_DIAMETER * Math.PI;
 
+        public static final double MAX_GENERATION_VOLTAGE = 10;  // Volts
+        public static final double MAX_GENERATION_VELOCITY = 3.25;  // Meters per second
+        public static final double MAX_GENERATION_ACCELERATION = 2.2;  // Meters per second squared
+
+
         // DriveSubsystem constants
         private static final double METERS_PER_ROTATION = Math.PI * DRIVE_WHEEL_DIAMETER;  // Meters
         public static final double TRACK_WIDTH = 0.72248;  // Meters (This value was given by SysID)
@@ -132,7 +137,7 @@ public final class Constants {
         public static final int intakeInVoltage = -6;
         public static final int intakeOutVoltage = 7;
 
-        public static final int shooterHighVelocity = -2100;
+        public static final int shooterHighVelocity = -2000;
         public static final int shooterLowVelocity = -1200;
         public static final int shooterBackVoltage = 3;
 
