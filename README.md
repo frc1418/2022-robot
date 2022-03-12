@@ -1,8 +1,8 @@
 # 2022-robot
-🤖 Code for our 2022 competition robot.
+Code for our 2022 competition robot 🤖.
 
 ## Controls
-We use two joysticks and 1 ps3 controller to control the robot:
+We use two joysticks and one ps3 controller to control the robot:
 
 * 2 x **Logitech Attack 3** (`leftJoystick` and `rightJoystick`)
 * 1 x **ZD-V+ Gaming Controller** (`altJoystick`)
