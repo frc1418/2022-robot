@@ -46,10 +46,10 @@ public class ShooterSubsystem  extends SubsystemBase {
         shooterController.setD(0);
         shooterController.setFF(0);
 
-        kP.setDouble(0.000021);
-        kI.setDouble(0.0000000000025);
-        kD.setDouble(0.000000011);
-        kF.setDouble(0.0002025);
+        kP.setDouble(0.0001);
+        kI.setDouble(0.0000000008);
+        kD.setDouble(0.00024);
+        kF.setDouble(0.000178);
     }
 
     public void shootVelocity(double shooterSpeed) {
@@ -65,7 +65,7 @@ public class ShooterSubsystem  extends SubsystemBase {
     public void periodic() {
 
         // sets networkTable values
-        rpm.setDouble(this.shooterEncoder.getVelocity());
+        rpm.setDouble(getRPM());
         ntTargetRPM.setDouble(targetRPM);
         output.setDouble(this.shooterMotor.getAppliedOutput());
         current.setDouble(this.shooterMotor.getOutputCurrent());
@@ -85,5 +85,13 @@ public class ShooterSubsystem  extends SubsystemBase {
     public void setPiston(DoubleSolenoid.Value value) {
         // if true, piston should extend
         shooterSolenoid.set(value);
+    }
+
+    public double getRPM(){
+        return this.shooterEncoder.getVelocity();
+    }
+
+    public boolean atSetpoint(){
+        return Math.abs(getRPM() - targetRPM) < 100;
     }
 }
