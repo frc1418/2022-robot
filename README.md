@@ -1,13 +1,16 @@
 # 2022-robot
-🤖 Code for our 2022 competition robot.
+Code for our 2022 competition robot 🤖.
 
 ## Controls
-We use three total joysticks to control the robot:
+We use two joysticks and one ps3 controller to control the robot:
 
-* 2 x **Logitech Attack 3** (`joystick_left` and `joystick_right`)
-* 1 x **Logitech Extreme 3D Pro** (`joystick_alt`)
+* 2 x **Logitech Attack 3** (`leftJoystick` and `rightJoystick`)
+* 1 x **ZD-V+ Gaming Controller** (`altJoystick`)
 
-<img src="res/ATK3.png" height="600"><img src="res/X3D.png" height="600">
+<img src="res/driver_controls.png" height="400"/>
+<img src="res/robotics_shooter_controls.png" height="400"/>
+
+["PS4 Buttons"](https://arks.itch.io/ps4-buttons) by [Arks💢](https://itch.io/profile/arks) is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
 
 ## Run Code With Gradle
 Gradle allows us to build and deploy our Java code to the robot
