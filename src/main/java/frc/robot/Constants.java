@@ -106,7 +106,7 @@ public final class Constants {
     public static final class Climber {
         public static final int CLIMBER_MOTOR = 9;
         public static final int MEDIUM_RUNG_POS = 100;
-        public static final int CLIMBER_DOWN_POS = 5;
+        public static final int CLIMBER_DOWN_POS = 1;
 
         public static final int CLICKS_PER_ROTAITON = 2048;
     }
