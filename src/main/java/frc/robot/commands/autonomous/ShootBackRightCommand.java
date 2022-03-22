@@ -19,8 +19,8 @@ import frc.robot.common.Odometry;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.StorageSubsystem;
-
-import frc.robot.Constants.DriveTrain;;
+import frc.robot.Constants.AutomonousValues;
+import frc.robot.Constants.DriveTrain;
 
 public class ShootBackRightCommand extends SequentialCommandGroup {
 
@@ -54,7 +54,9 @@ public class ShootBackRightCommand extends SequentialCommandGroup {
 
 
         addCommands(
-            new ShootyCommand(-2000, 2.5, 3, 6, shooterSubsystem, storageSubsystem),
+            new ShootyCommand(AutomonousValues.autoShooterVelocity,
+                    AutomonousValues.autoStorageVolts, AutomonousValues.autoShootTime,
+                    AutomonousValues.autoShootTimeout, shooterSubsystem, storageSubsystem),
             new FollowTrajectoryCommand(backRight, odometry, driveSubsystem, true));
 
     }

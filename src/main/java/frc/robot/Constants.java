@@ -82,6 +82,12 @@ public final class Constants {
         public static final int SHOOTER_MOTOR = 5;
         public static final int SHOOTER_SOLENOID_FWD = 6;
         public static final int SHOOTER_SOLENOID_REV = 7;
+
+        // TODO: configure new shooter PID
+        public static final int kP = 0;
+        public static final int kI = 0;
+        public static final int kD = 0;
+        public static final int kF = 0;
     }
 
     public static final class Intake {
@@ -134,8 +140,8 @@ public final class Constants {
     }
 
     public static final class DriverValues {
-        public static final int intakeInVoltage = -6;
-        public static final int intakeOutVoltage = 7;
+        public static final int intakeInVoltage = -9;
+        public static final int intakeOutVoltage = 9;
 
         public static final int shooterHighVelocity = -2000;
         public static final int shooterLowVelocity = -1200;
@@ -146,6 +152,14 @@ public final class Constants {
 
         public static final double climberUpVoltage = 0.3;
         public static final double climberDownVoltage = -0.3;
+    }
+
+    public static final class AutomonousValues {
+
+        public static final int autoShooterVelocity = -1200;
+        public static final double autoStorageVolts= 2.5;
+        public static final double autoShootTime = 3;
+        public static final double autoShootTimeout = 6;
     }
   
     public static final int EXTRA_CAN_ID = 25;

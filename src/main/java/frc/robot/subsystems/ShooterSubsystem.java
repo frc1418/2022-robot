@@ -11,6 +11,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.Shooter;
 
 import com.revrobotics.SparkMaxPIDController;
 
@@ -46,10 +47,10 @@ public class ShooterSubsystem  extends SubsystemBase {
         shooterController.setD(0);
         shooterController.setFF(0);
 
-        kP.setDouble(0.0001);
-        kI.setDouble(0.0000000008);
-        kD.setDouble(0.00024);
-        kF.setDouble(0.000178);
+        kP.setDouble(Shooter.kP);
+        kI.setDouble(Shooter.kI);
+        kD.setDouble(Shooter.kD);
+        kF.setDouble(Shooter.kF);
     }
 
     public void shootVelocity(double shooterSpeed) {
