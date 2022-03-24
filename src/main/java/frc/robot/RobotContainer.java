@@ -79,7 +79,7 @@ public class RobotContainer {
   private final Timer timer = new Timer();
 
   // DRIVE
-  public final CANSparkMax frontLeftMotor = new CANSparkMax(EXTRA_CAN_ID, MotorType.kBrushless);
+  public final CANSparkMax frontLeftMotor = new CANSparkMax(DriveTrain.FRONT_LEFT_MOTOR, MotorType.kBrushless);
   public final CANSparkMax frontRightMotor = new CANSparkMax(DriveTrain.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
   public final CANSparkMax rearLeftMotor = new CANSparkMax(DriveTrain.REAR_LEFT_MOTOR, MotorType.kBrushless);
   public final CANSparkMax rearRightMotor = new CANSparkMax(DriveTrain.REAR_RIGHT_MOTOR, MotorType.kBrushless);
@@ -245,10 +245,17 @@ public class RobotContainer {
     btnStorageOut
       .whileHeld(new InstantCommand(() -> {
         storageSubsystem.spinVolts(DriverValues.storageOutVoltage);
-        shooterSubsystem.shootVoltage(DriverValues.shooterBackVoltage);
       }, storageSubsystem))
-      .whenInactive(new InstantCommand(() -> storageSubsystem.spinVolts(0), storageSubsystem), true);
+      .whenInactive(new InstantCommand(() -> {
+        storageSubsystem.spinVolts(0);
+      }, storageSubsystem), true);
 
+    btnStorageOut.whileHeld(new InstantCommand(() -> {
+        shooterSubsystem.shootVoltage(3);
+      }, shooterSubsystem))
+      .whenInactive(new InstantCommand(() -> {
+        shooterSubsystem.shootVoltage(0);
+      }, shooterSubsystem), true);
     
     // CLIMBER
     btnClimberMiddle
@@ -298,6 +305,8 @@ public class RobotContainer {
     frontLeftMotor.setInverted(false);
     rearRightMotor.setInverted(true);
     rearLeftMotor.setInverted(false);
+
+    shooterMotor.setIdleMode(IdleMode.kCoast);
     
     storageMotorLeft.setInverted(true);
     storageMotorRight.setInverted(false);

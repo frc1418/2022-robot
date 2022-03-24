@@ -52,7 +52,7 @@ public final class Constants {
              * Reverse: 3  
      */
     public static final class DriveTrain {
-        public static final int FRONT_LEFT_MOTOR = 1;
+        public static final int FRONT_LEFT_MOTOR = 25;
         public static final int FRONT_RIGHT_MOTOR = 3;
         public static final int REAR_LEFT_MOTOR = 2;
         public static final int REAR_RIGHT_MOTOR = 4;
@@ -71,9 +71,9 @@ public final class Constants {
         public static final double TRACK_WIDTH = 0.72248;  // Meters (This value was given by SysID)
         public static final double WHEEL_BASE = 0.4469;  // Meters
 
-        public static final double KS = 0.18508;  // Volts
-        public static final double KV = 2.8169;  // Volt seconds per meter
-        public static final double KA = 0.30949;  // Volt seconds squared per meter
+        public static final double KS = 0.18838;  // Volts
+        public static final double KV = 2.7771;  // Volt seconds per meter
+        public static final double KA = 0.42762;  // Volt seconds squared per meter
         public static final DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH);
         public static final SimpleMotorFeedforward FEED_FORWARD = new SimpleMotorFeedforward(KS, KV, KA);
     }
@@ -82,6 +82,13 @@ public final class Constants {
         public static final int SHOOTER_MOTOR = 5;
         public static final int SHOOTER_SOLENOID_FWD = 6;
         public static final int SHOOTER_SOLENOID_REV = 7;
+
+        public static final double kP = 0.00023;
+        public static final double kI = 0.00000001;
+        public static final double kD = 0.00000001;
+        public static final double kF = 0.000184;
+
+        public static final int SHOOTER_RATIO = 4;
     }
 
     public static final class Intake {
@@ -99,8 +106,8 @@ public final class Constants {
 
     public static final class Climber {
         public static final int CLIMBER_MOTOR = 9;
-        public static final int MEDIUM_RUNG_POS = 100;
-        public static final int CLIMBER_DOWN_POS = 5;
+        public static final int MEDIUM_RUNG_POS = 102;
+        public static final int CLIMBER_DOWN_POS = 1;
 
         public static final int CLICKS_PER_ROTAITON = 2048;
     }
@@ -134,8 +141,8 @@ public final class Constants {
     }
 
     public static final class DriverValues {
-        public static final int intakeInVoltage = -6;
-        public static final int intakeOutVoltage = 7;
+        public static final int intakeInVoltage = -9;
+        public static final int intakeOutVoltage = 9;
 
         public static final int shooterHighVelocity = -2000;
         public static final int shooterLowVelocity = -1200;
@@ -144,10 +151,18 @@ public final class Constants {
         public static final double storageInVoltage = 2.5;
         public static final double storageOutVoltage = -2.5;
 
-        public static final double climberUpVoltage = 0.3;
-        public static final double climberDownVoltage = -0.3;
+        public static final double climberUpVoltage = 1;
+        public static final double climberDownVoltage = -0.5;
+    }
+
+    public static final class AutomonousValues {
+
+        public static final int autoShooterVelocity = -1200;
+        public static final double autoStorageVolts= 2.5;
+        public static final double autoShootTime = 3;
+        public static final double autoShootTimeout = 6;
     }
   
-    public static final int EXTRA_CAN_ID = 25;
+    public static final int EXTRA_CAN_ID = 0;
     public static final int EXTRA_CAN_ID_2 = 24;
 }
