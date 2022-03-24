@@ -151,8 +151,8 @@ public final class Constants {
         public static final double storageInVoltage = 2.5;
         public static final double storageOutVoltage = -2.5;
 
-        public static final double climberUpVoltage = 1;
-        public static final double climberDownVoltage = -0.5;
+        public static final double climberUpVoltage = 0.5;
+        public static final double climberDownVoltage = -0.7;
     }
 
     public static final class AutomonousValues {

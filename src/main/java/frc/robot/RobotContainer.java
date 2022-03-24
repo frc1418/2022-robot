@@ -92,6 +92,7 @@ public class RobotContainer {
 
   private final NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
   private final NetworkTable table = ntInstance.getTable("/components/drivetrain");
+
   private final NetworkTableEntry slowModeEntry = table.getEntry("slow_mode");
   private final NetworkTableEntry slowRotationEntry = table.getEntry("slow_rotation");
 
@@ -152,8 +153,8 @@ public class RobotContainer {
   // SENDABLE CHOOSER
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
   private final Command shootBackCommand = new ShootStraightBackCommand(driveSubsystem, odometry, storageSubsystem, shooterSubsystem, trajectories);
-  private final Command shootRightCommand = new ShootBackRightCommand(driveSubsystem, odometry, storageSubsystem, shooterSubsystem, trajectories);
-  private final Command shootLeftCommand = new ShootBackLeftCommand(driveSubsystem, odometry, storageSubsystem, shooterSubsystem, trajectories);
+  private final Command shootRightCommand = new ShootBackLeftCommand(driveSubsystem, odometry, storageSubsystem, shooterSubsystem, trajectories);
+  private final Command shootLeftCommand = new ShootBackRightCommand(driveSubsystem, odometry, storageSubsystem, shooterSubsystem, trajectories);
   private final Command straightBackCommand = new ChargeCommand(driveSubsystem, odometry, trajectories);
   private final Command shootCommand = new ShootyCommand(-2100, 2.5, 3, 8, shooterSubsystem, storageSubsystem);
 
