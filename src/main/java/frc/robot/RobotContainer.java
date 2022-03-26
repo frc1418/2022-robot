@@ -24,6 +24,8 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PS4Controller.Axis;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
@@ -90,6 +92,7 @@ public class RobotContainer {
 
   private final NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
   private final NetworkTable table = ntInstance.getTable("/components/drivetrain");
+
   private final NetworkTableEntry slowModeEntry = table.getEntry("slow_mode");
   private final NetworkTableEntry slowRotationEntry = table.getEntry("slow_rotation");
 
@@ -146,9 +149,26 @@ public class RobotContainer {
   private final TrajectoryLoader trajectoryLoader = new TrajectoryLoader();
   private final HashMap<String, Trajectory> trajectories = trajectoryLoader.loadTrajectories();
 
+
+  // SENDABLE CHOOSER
+  private final SendableChooser<Command> m_chooser = new SendableChooser<>();
+  private final Command shootBackCommand = new ShootStraightBackCommand(driveSubsystem, odometry, storageSubsystem, shooterSubsystem, trajectories);
+  private final Command shootRightCommand = new ShootBackLeftCommand(driveSubsystem, odometry, storageSubsystem, shooterSubsystem, trajectories);
+  private final Command shootLeftCommand = new ShootBackRightCommand(driveSubsystem, odometry, storageSubsystem, shooterSubsystem, trajectories);
+  private final Command straightBackCommand = new ChargeCommand(driveSubsystem, odometry, trajectories);
+  private final Command shootCommand = new ShootyCommand(-2100, 2.5, 3, 8, shooterSubsystem, storageSubsystem);
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(RobotBase robot) {
     this.robot = robot;
+
+    m_chooser.setDefaultOption("Shoot Straight Back", shootBackCommand);
+    m_chooser.addOption("Shoot Back Right", shootRightCommand);
+    m_chooser.addOption("Shoot Back Left", shootLeftCommand);
+    m_chooser.addOption("Charge Backward", straightBackCommand);
+    m_chooser.addOption("Shoot", shootCommand);
+    SmartDashboard.putData(m_chooser);
+
     // Configure the button bindings
     configureObjects();
     configureButtonBindings();
@@ -322,9 +342,11 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     odometry.zeroHeading();
+    return m_chooser.getSelected();
     // return new ShootStraightBackCommand(driveSubsystem, odometry, storageSubsystem, shooterSubsystem, trajectories);
     // return new ShootBackRightCommand(driveSubsystem, odometry, storageSubsystem, shooterSubsystem, trajectories);
-    return new ShootBackLeftCommand(driveSubsystem, odometry, storageSubsystem, shooterSubsystem, trajectories);
+    // return new ShootBackLeftCommand(driveSubsystem, odometry, storageSubsystem, shooterSubsystem, trajectories);
+    // return new ChargeCommand(driveSubsystem, odometry, trajectories);
     // return new ShootyCommand(-2100, 2.5, 3, 8, shooterSubsystem, storageSubsystem);
   }
   
