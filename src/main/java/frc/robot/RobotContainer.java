@@ -110,7 +110,7 @@ public class RobotContainer {
   private final DriveSubsystem driveSubsystem = new DriveSubsystem(driveTrain, leftMotors, rightMotors, odometry, field, timer);
 
   private final double xSpeedMultiplierNormal = 0.7;
-  private final double xRotationMultiplierNormal = 0.6;
+  private final double xRotationMultiplierNormal = 0.7;
 
   private final double xSpeedMultiplierSlow = xSpeedMultiplierNormal * 0.7;
   private final double xRotationMultiplierSlow = xRotationMultiplierNormal * 0.7;

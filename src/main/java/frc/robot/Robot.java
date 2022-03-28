@@ -7,6 +7,9 @@ package frc.robot;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -38,8 +41,15 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer(this);
     timer = m_robotContainer.getTimer();
-    CameraServer.startAutomaticCapture(0);
-    CameraServer.startAutomaticCapture(1);
+
+   
+    UsbCamera camera = CameraServer.startAutomaticCapture(0);
+    camera.setResolution(176, 144);
+    camera.setFPS(15);
+    // CvSink cvSink = CameraServer.getVideo();
+
+    // CvSource outputStream = CameraServer.putVideo("USB Camera 0", 176, 144);
+    // CameraServer.startAutomaticCapture(1);
   }
 
   /**

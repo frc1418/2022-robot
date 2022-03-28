@@ -157,7 +157,7 @@ public final class Constants {
 
     public static final class AutomonousValues {
 
-        public static final int autoShooterVelocity = -1200;
+        public static final int autoShooterVelocity = -1950;
         public static final double autoStorageVolts= 2.5;
         public static final double autoShootTime = 3;
         public static final double autoShootTimeout = 6;
