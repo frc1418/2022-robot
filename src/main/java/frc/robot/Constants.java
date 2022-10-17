@@ -144,8 +144,8 @@ public final class Constants {
         public static final int intakeInVoltage = -9;
         public static final int intakeOutVoltage = 9;
 
-        public static final int shooterHighVelocity = -2000;
-        public static final int shooterLowVelocity = -1200;
+        public static final int shooterHighVelocity = -1900;
+        public static final int shooterLowVelocity = -1250;
         public static final int shooterBackVoltage = 3;
 
         public static final double storageInVoltage = 2.5;
@@ -157,7 +157,7 @@ public final class Constants {
 
     public static final class AutomonousValues {
 
-        public static final int autoShooterVelocity = -1200;
+        public static final int autoShooterVelocity = -1900;
         public static final double autoStorageVolts= 2.5;
         public static final double autoShootTime = 3;
         public static final double autoShootTimeout = 6;
